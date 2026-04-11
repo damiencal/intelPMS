@@ -1,8 +1,7 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import {
@@ -17,6 +16,8 @@ import {
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
 
+const STORAGE_KEY = 'hostgrowth-notification-prefs'
+
 const notificationsFormSchema = z.object({
   type: z.enum(['all', 'mentions', 'none'], {
     error: (iss) =>
@@ -25,27 +26,38 @@ const notificationsFormSchema = z.object({
         : undefined,
   }),
   mobile: z.boolean().default(false).optional(),
-  communication_emails: z.boolean().default(false).optional(),
-  social_emails: z.boolean().default(false).optional(),
-  marketing_emails: z.boolean().default(false).optional(),
+  booking_emails: z.boolean().default(true).optional(),
+  review_emails: z.boolean().default(true).optional(),
+  pricing_emails: z.boolean().default(false).optional(),
   security_emails: z.boolean(),
 })
 
 type NotificationsFormValues = z.infer<typeof notificationsFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<NotificationsFormValues> = {
-  communication_emails: false,
-  marketing_emails: false,
-  social_emails: true,
-  security_emails: true,
+function loadPrefs(): Partial<NotificationsFormValues> {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    if (raw) return JSON.parse(raw)
+  } catch {}
+  return {
+    type: 'all',
+    booking_emails: true,
+    review_emails: true,
+    pricing_emails: false,
+    security_emails: true,
+  }
 }
 
 export function NotificationsForm() {
   const form = useForm<NotificationsFormValues>({
     resolver: zodResolver(notificationsFormSchema),
-    defaultValues,
+    defaultValues: loadPrefs(),
   })
+
+  function onSubmit(data: NotificationsFormValues) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+    toast.success('Notification preferences saved')
+  }
 
   return (
     <Form {...form}>
@@ -98,15 +110,16 @@ export function NotificationsForm() {
           <div className='space-y-4'>
             <FormField
               control={form.control}
-              name='communication_emails'
+              name='booking_emails'
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base'>
-                      Communication emails
+                      Booking notifications
                     </FormLabel>
                     <FormDescription>
-                      Receive emails about your account activity.
+                      Receive emails about new bookings, cancellations, and
+                      check-in/check-out reminders.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -120,15 +133,15 @@ export function NotificationsForm() {
             />
             <FormField
               control={form.control}
-              name='marketing_emails'
+              name='review_emails'
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base'>
-                      Marketing emails
+                      Review notifications
                     </FormLabel>
                     <FormDescription>
-                      Receive emails about new products, features, and more.
+                      Receive emails when new guest reviews are posted.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -142,13 +155,15 @@ export function NotificationsForm() {
             />
             <FormField
               control={form.control}
-              name='social_emails'
+              name='pricing_emails'
               render={({ field }) => (
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
-                    <FormLabel className='text-base'>Social emails</FormLabel>
+                    <FormLabel className='text-base'>
+                      Pricing alerts
+                    </FormLabel>
                     <FormDescription>
-                      Receive emails for friend requests, follows, and more.
+                      Receive emails about pricing proposals and rate changes.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -197,23 +212,17 @@ export function NotificationsForm() {
               </FormControl>
               <div className='space-y-1 leading-none'>
                 <FormLabel>
-                  Use different settings for my mobile devices
+                  Receive push notifications on mobile
                 </FormLabel>
                 <FormDescription>
-                  You can manage your mobile notifications in the{' '}
-                  <Link
-                    to='/settings'
-                    className='underline decoration-dashed underline-offset-4 hover:decoration-solid'
-                  >
-                    mobile settings
-                  </Link>{' '}
-                  page.
+                  Get instant alerts for new bookings and messages on your
+                  mobile devices.
                 </FormDescription>
               </div>
             </FormItem>
           )}
         />
-        <Button type='submit'>Update notifications</Button>
+        <Button type='submit'>Save preferences</Button>
       </form>
     </Form>
   )

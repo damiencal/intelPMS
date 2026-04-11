@@ -1,16 +1,20 @@
+import { Loader2 } from 'lucide-react'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { useTasks as useTasksQuery } from './api'
 import { TasksDialogs } from './components/tasks-dialogs'
 import { TasksPrimaryButtons } from './components/tasks-primary-buttons'
 import { TasksProvider } from './components/tasks-provider'
 import { TasksTable } from './components/tasks-table'
-import { tasks } from './data/tasks'
 
 export function Tasks() {
+  const { data, isLoading } = useTasksQuery()
+  const tasks = data?.data ?? []
+
   return (
     <TasksProvider>
       <Header fixed>
@@ -27,12 +31,18 @@ export function Tasks() {
           <div>
             <h2 className='text-2xl font-bold tracking-tight'>Tasks</h2>
             <p className='text-muted-foreground'>
-              Here&apos;s a list of your tasks for this month!
+              Manage property maintenance, cleaning, and inspection tasks
             </p>
           </div>
           <TasksPrimaryButtons />
         </div>
-        <TasksTable data={tasks} />
+        {isLoading ? (
+          <div className='flex flex-1 items-center justify-center'>
+            <Loader2 className='h-8 w-8 animate-spin text-muted-foreground' />
+          </div>
+        ) : (
+          <TasksTable data={tasks} />
+        )}
       </Main>
 
       <TasksDialogs />

@@ -1,0 +1,1107 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// Multi-Tenant Core
+// ==========================================
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String   @db.VarChar(255)
+  slug      String   @unique @db.VarChar(255)
+  plan      String   @default("starter") @db.VarChar(50)
+  timezone  String   @default("UTC") @db.VarChar(100)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users              User[]
+  connections        HostexConnection[]
+  properties         Property[]
+  pricingRules       PricingRule[]
+  seasonalStrategies SeasonalStrategy[]
+  proposals          PricingProposal[]
+  activityLogs       ActivityLog[]
+  tasks              Task[]
+  messageTemplates   MessageTemplate[]
+  expenses           Expense[]
+  maintenanceRequests MaintenanceRequest[]
+  cleaningSchedules  CleaningSchedule[]
+  documents          Document[]
+  autoMessages       AutoMessage[]
+  vendors            Vendor[]
+  inventoryItems     InventoryItem[]
+  notifications      Notification[]
+  guestCheckins      GuestCheckin[]
+  keyHandovers       KeyHandover[]
+  teamShifts         TeamShift[]
+  taxReports         TaxReport[]
+  guestFeedback      GuestFeedback[]
+  securityDeposits   SecurityDeposit[]
+  rateParityChecks   RateParityCheck[]
+  competitorRates    CompetitorRate[]
+  loyaltyMembers     LoyaltyMember[]
+  insurancePolicies  InsurancePolicy[]
+  utilityBills       UtilityBill[]
+  pricingRecommendations PricingRecommendation[]
+  staffPayrolls      StaffPayroll[]
+  channelSyncLogs    ChannelSyncLog[]
+
+  @@index([slug])
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique @db.VarChar(255)
+  passwordHash   String   @db.VarChar(255)
+  name           String   @db.VarChar(255)
+  role           String   @default("viewer") @db.VarChar(50) // owner, manager, viewer
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+// ==========================================
+// Hostex Connections
+// ==========================================
+
+model HostexConnection {
+  id             String    @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  label          String    @db.VarChar(255)
+  authMethod     String    @db.VarChar(20) // "token" | "oauth"
+  accessToken    String    @db.Text // encrypted (AES-256-GCM)
+  refreshToken   String?   @db.Text // encrypted, OAuth only
+  tokenExpiresAt DateTime?
+  isActive       Boolean   @default(true)
+  lastSyncAt     DateTime?
+  syncStatus     String?   @db.VarChar(50) // null, "syncing", "completed", "failed"
+  syncError      String?   @db.Text
+  webhookId      String?   @db.VarChar(255)
+  webhookSecret  String?   @db.VarChar(255)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  properties Property[]
+
+  @@index([organizationId])
+}
+
+// ==========================================
+// Properties & Listings
+// ==========================================
+
+model Property {
+  id             String   @id @default(cuid())
+  hostexId       String   @unique @db.VarChar(255)
+  connectionId   String
+  connection     HostexConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  address        String?  @db.VarChar(500)
+  currency       String   @default("USD") @db.VarChar(10)
+  timezone       String   @default("UTC") @db.VarChar(100)
+  imageUrl       String?  @db.VarChar(500)
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  roomTypes    RoomType[]
+  listings     Listing[]
+  reservations Reservation[]
+  reviews      Review[]
+  conversations Conversation[]
+  conciergeKnowledge ConciergeKnowledge?
+  expenses       Expense[]
+  maintenanceRequests MaintenanceRequest[]
+  cleaningSchedules  CleaningSchedule[]
+  documents          Document[]
+  inventoryItems     InventoryItem[]
+  guestCheckins      GuestCheckin[]
+  keyHandovers       KeyHandover[]
+  teamShifts         TeamShift[]
+  guestFeedback      GuestFeedback[]
+  securityDeposits   SecurityDeposit[]
+  rateParityChecks   RateParityCheck[]
+  competitorRates    CompetitorRate[]
+  insurancePolicies  InsurancePolicy[]
+  utilityBills       UtilityBill[]
+  pricingRecommendations PricingRecommendation[]
+  channelSyncLogs    ChannelSyncLog[]
+
+  @@index([organizationId])
+  @@index([connectionId])
+}
+
+model RoomType {
+  id         String   @id @default(cuid())
+  hostexId   String   @unique @db.VarChar(255)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name       String   @db.VarChar(255)
+  maxGuests  Int?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([propertyId])
+}
+
+model Listing {
+  id         String   @id @default(cuid())
+  hostexId   String   @unique @db.VarChar(255)
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  channel    String   @db.VarChar(50) // airbnb, booking, vrbo, etc.
+  channelName String  @db.VarChar(100)
+  listingUrl String?  @db.VarChar(500)
+  basePrice  Float?
+  currency   String   @default("USD") @db.VarChar(10)
+  isActive   Boolean  @default(true)
+  metadata   Json?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  calendarEntries CalendarEntry[]
+  proposalChanges ProposalChange[]
+
+  @@index([propertyId])
+  @@index([channel])
+}
+
+model CalendarEntry {
+  id                String   @id @default(cuid())
+  listingId         String
+  listing           Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  date              DateTime @db.Date
+  price             Float?
+  available         Boolean  @default(true)
+  inventory         Int      @default(1)
+  minStay           Int?
+  maxStay           Int?
+  closedOnArrival   Boolean  @default(false)
+  closedOnDeparture Boolean  @default(false)
+  syncedAt          DateTime @default(now())
+
+  @@unique([listingId, date])
+  @@index([listingId, date])
+}
+
+// ==========================================
+// Reservations
+// ==========================================
+
+model Reservation {
+  id             String   @id @default(cuid())
+  hostexId       String   @unique @db.VarChar(255)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  channel        String?  @db.VarChar(50)
+  guestName      String?  @db.VarChar(255)
+  guestEmail     String?  @db.VarChar(255)
+  guestPhone     String?  @db.VarChar(100)
+  checkIn        DateTime @db.Date
+  checkOut       DateTime @db.Date
+  status         String   @db.VarChar(50) // confirmed, pending, cancelled, etc.
+  totalPrice     Float?
+  currency       String   @default("USD") @db.VarChar(10)
+  numGuests      Int?
+  confirmationCode String? @db.VarChar(255)
+  source         String?  @db.VarChar(100)
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([propertyId])
+  @@index([checkIn])
+  @@index([status])
+}
+
+// ==========================================
+// Reviews
+// ==========================================
+
+model Review {
+  id              String   @id @default(cuid())
+  hostexId        String   @unique @db.VarChar(255)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reservationCode String?  @db.VarChar(255)
+  channel         String?  @db.VarChar(50)
+  guestName       String?  @db.VarChar(255)
+  rating          Float?
+  content         String?  @db.Text
+  sentiment       String?  @db.VarChar(20) // positive, neutral, negative
+  responseStatus  String   @default("needs_response") @db.VarChar(50) // needs_response, draft_ready, responded
+  responseDraft   String?  @db.Text
+  respondedAt     DateTime?
+  reviewDate      DateTime?
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([propertyId])
+}
+
+// ==========================================
+// Messaging
+// ==========================================
+
+model Conversation {
+  id              String   @id @default(cuid())
+  hostexId        String   @unique @db.VarChar(255)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  guestName       String?  @db.VarChar(255)
+  channel         String?  @db.VarChar(50)
+  lastMessageAt   DateTime?
+  unreadCount     Int      @default(0)
+  metadata        Json?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  messages Message[]
+
+  @@index([propertyId])
+  @@index([lastMessageAt])
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         String   @db.VarChar(50) // "guest" | "host" | "system"
+  content        String   @db.Text
+  messageType    String   @default("text") @db.VarChar(20) // "text" | "image"
+  sentAt         DateTime @default(now())
+  metadata       Json?
+
+  @@index([conversationId, sentAt])
+}
+
+model ConciergeKnowledge {
+  id             String   @id @default(cuid())
+  propertyId     String   @unique
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  checkInInstructions String? @db.Text
+  houseRules     String?  @db.Text
+  localRestaurants String? @db.Text
+  localActivities String? @db.Text
+  transportation String?  @db.Text
+  customNotes    String?  @db.Text
+  updatedAt      DateTime @updatedAt
+}
+
+// ==========================================
+// Pricing Engine
+// ==========================================
+
+model PricingRule {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  type           String   @db.VarChar(50) // base_rate, day_of_week, occupancy, seasonal, event, last_minute, length_of_stay, gap_fill
+  priority       Int      @default(0)
+  conditions     Json     // PricingCondition[]
+  action         Json     // PricingAction
+  enabled        Boolean  @default(true)
+  appliesTo      Json     // { property_ids?: string[], listing_ids?: string[], all?: boolean }
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, enabled])
+}
+
+model SeasonalStrategy {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  propertyIds    Json     // string[]
+  seasons        Json     // Season[]
+  notes          String?  @db.Text
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+// ==========================================
+// Pricing Proposals (Review Workflow)
+// ==========================================
+
+model PricingProposal {
+  id                     String   @id @default(cuid())
+  organizationId         String
+  organization           Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  status                 String   @default("draft") @db.VarChar(50) // draft, pending_review, approved, applied, rejected, partially_applied
+  dateRangeStart         DateTime @db.Date
+  dateRangeEnd           DateTime @db.Date
+  totalChanges           Int
+  totalListingsAffected  Int      @default(0)
+  avgPriceChangePct      Float
+  estimatedRevenueImpact Float?
+  forecastNotes          Json?    // ForecastNotes object
+  reviewNotes            String?  @db.Text
+  createdBy              String   @db.VarChar(255)
+  reviewedBy             String?  @db.VarChar(255)
+  reviewedAt             DateTime?
+  appliedBy              String?  @db.VarChar(255)
+  appliedAt              DateTime?
+  scheduledFor           DateTime?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  changes ProposalChange[]
+
+  @@index([organizationId, status])
+  @@index([createdAt])
+}
+
+model ProposalChange {
+  id               String          @id @default(cuid())
+  proposalId       String
+  proposal         PricingProposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  listingId        String
+  listing          Listing         @relation(fields: [listingId], references: [id])
+  date             DateTime        @db.Date
+  currentPrice     Float
+  recommendedPrice Float
+  changeAmount     Float
+  changePct        Float
+  rulesApplied     Json // string[]
+  included         Boolean         @default(true)
+  applyStatus      String?         @db.VarChar(50) // null, "pending", "success", "failed"
+  applyError       String?         @db.Text
+
+  @@index([proposalId])
+  @@index([listingId])
+}
+
+// ==========================================
+// MySQL-based Job Queue
+// ==========================================
+
+model JobQueue {
+  id           String    @id @default(cuid())
+  queue        String    @db.VarChar(100) // "sync", "pricing", "webhook", "email"
+  payload      Json
+  status       String    @default("pending") @db.VarChar(50) // pending, processing, completed, failed
+  attempts     Int       @default(0)
+  maxAttempts  Int       @default(3)
+  lastError    String?   @db.Text
+  scheduledAt  DateTime  @default(now())
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@index([queue, status, scheduledAt])
+}
+
+// ==========================================
+// Activity Log / Audit Trail
+// ==========================================
+
+model ActivityLog {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?  @db.VarChar(255)
+  type           String   @db.VarChar(100)
+  description    String   @db.Text
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+// ==========================================
+// Task Management
+// ==========================================
+
+model Task {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String?  @db.VarChar(255)
+  title          String   @db.VarChar(500)
+  description    String?  @db.Text
+  status         String   @default("todo") @db.VarChar(50) // backlog, todo, in_progress, done, canceled
+  priority       String   @default("medium") @db.VarChar(50) // low, medium, high, critical
+  label          String?  @db.VarChar(100) // bug, feature, maintenance, cleaning, inspection
+  assigneeId     String?  @db.VarChar(255)
+  dueDate        DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, dueDate])
+}
+
+// ==========================================
+// Messaging Templates
+// ==========================================
+
+model MessageTemplate {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  trigger        String   @db.VarChar(100) // booking_confirmed, check_in_reminder, check_out_reminder, review_request, custom
+  subject        String?  @db.VarChar(500)
+  body           String   @db.Text
+  channel        String   @default("all") @db.VarChar(50) // all, airbnb, booking, direct
+  delayMinutes   Int      @default(0) // delay after trigger event
+  enabled        Boolean  @default(true)
+  propertyIds    Json?    // string[] — null means all properties
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  autoMessages   AutoMessage[]
+
+  @@index([organizationId, trigger])
+}
+
+// ==========================================
+// Expense Tracking
+// ==========================================
+
+model Expense {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String?
+  property       Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  category       String   @db.VarChar(100) // cleaning, maintenance, supplies, utilities, insurance, taxes, marketing, other
+  description    String   @db.VarChar(500)
+  amount         Float
+  currency       String   @default("USD") @db.VarChar(10)
+  date           DateTime @db.Date
+  vendor         String?  @db.VarChar(255)
+  receiptUrl     String?  @db.VarChar(500)
+  recurring      Boolean  @default(false)
+  notes          String?  @db.Text
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, date])
+  @@index([organizationId, category])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Maintenance Requests
+// ==========================================
+
+model MaintenanceRequest {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  title          String   @db.VarChar(500)
+  description    String?  @db.Text
+  priority       String   @default("medium") @db.VarChar(50) // low, medium, high, urgent
+  status         String   @default("open") @db.VarChar(50) // open, in_progress, waiting_parts, completed, cancelled
+  category       String?  @db.VarChar(100) // plumbing, electrical, hvac, appliance, structural, cleaning, other
+  assignee       String?  @db.VarChar(255)
+  estimatedCost  Float?
+  actualCost     Float?
+  scheduledDate  DateTime?
+  completedDate  DateTime?
+  photos         Json?    // string[] urls
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, status])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Cleaning Schedule
+// ==========================================
+
+model CleaningSchedule {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reservationId  String?  @db.VarChar(255)
+  type           String   @db.VarChar(50) // turnover, deep_clean, routine, pre_checkin
+  status         String   @default("pending") @db.VarChar(50) // pending, in_progress, completed, skipped
+  scheduledDate  DateTime @db.Date
+  scheduledTime  String?  @db.VarChar(10) // HH:MM
+  assignee       String?  @db.VarChar(255)
+  estimatedHours Float?   @default(2)
+  actualHours    Float?
+  cost           Float?
+  notes          String?  @db.Text
+  checklist      Json?    // { item: string, done: boolean }[]
+  completedAt    DateTime?
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, scheduledDate])
+  @@index([organizationId, status])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Documents
+// ==========================================
+
+model Document {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String?
+  property       Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  name           String   @db.VarChar(500)
+  category       String   @db.VarChar(100) // lease, contract, insurance, manual, license, tax, receipt, other
+  fileUrl        String   @db.VarChar(1000)
+  fileType       String?  @db.VarChar(50) // pdf, docx, png, jpg, etc.
+  fileSize       Int?     // bytes
+  expiresAt      DateTime?
+  notes          String?  @db.Text
+  uploadedBy     String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, category])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Auto-Messages
+// ==========================================
+
+model AutoMessage {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  templateId     String
+  template       MessageTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  reservationId  String   @db.VarChar(255)
+  guestName      String?  @db.VarChar(255)
+  channel        String?  @db.VarChar(50)
+  triggerEvent   String   @db.VarChar(100) // booking_confirmed, check_in_reminder, check_out_reminder, review_request
+  scheduledAt    DateTime
+  sentAt         DateTime?
+  status         String   @default("pending") @db.VarChar(50) // pending, sent, failed, cancelled
+  renderedBody   String?  @db.Text
+  errorMessage   String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, scheduledAt])
+}
+
+// ==========================================
+// Vendor / Contractor Management
+// ==========================================
+
+model Vendor {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  company        String?  @db.VarChar(255)
+  email          String?  @db.VarChar(255)
+  phone          String?  @db.VarChar(100)
+  specialty      String   @db.VarChar(100) // plumbing, electrical, hvac, cleaning, landscaping, general, painting, locksmith, pest_control, other
+  rating         Float?   // 1-5 star rating
+  hourlyRate     Float?
+  currency       String   @default("USD") @db.VarChar(10)
+  address        String?  @db.VarChar(500)
+  notes          String?  @db.Text
+  isActive       Boolean  @default(true)
+  totalJobs      Int      @default(0)
+  totalPaid      Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, specialty])
+  @@index([organizationId, isActive])
+}
+
+// ==========================================
+// Inventory / Supplies
+// ==========================================
+
+model InventoryItem {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String?
+  property       Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  name           String   @db.VarChar(255)
+  category       String   @db.VarChar(100) // linens, toiletries, kitchen, cleaning_supplies, furniture, electronics, safety, amenities, other
+  quantity       Int      @default(0)
+  minQuantity    Int      @default(0) // reorder threshold
+  unit           String?  @db.VarChar(50) // pieces, sets, bottles, rolls, kg, liters
+  costPerUnit    Float?
+  currency       String   @default("USD") @db.VarChar(10)
+  supplier       String?  @db.VarChar(255)
+  location       String?  @db.VarChar(255) // storage location
+  lastRestocked  DateTime?
+  notes          String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, category])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Notifications
+// ==========================================
+
+model Notification {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String?  @db.VarChar(255) // null = all users in org
+  type           String   @db.VarChar(100) // booking, check_in, check_out, review, maintenance, expense, cleaning, inventory, system
+  title          String   @db.VarChar(500)
+  message        String   @db.Text
+  link           String?  @db.VarChar(500) // internal link to navigate to
+  isRead         Boolean  @default(false)
+  readAt         DateTime?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, userId, isRead])
+  @@index([organizationId, createdAt])
+}
+
+// ==========================================
+// Guest Check-in Portal
+// ==========================================
+
+model GuestCheckin {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reservationId  String?  @db.VarChar(255)
+  guestName      String?  @db.VarChar(255)
+  accessCode     String?  @db.VarChar(100) // smart lock or keybox code
+  wifiName       String?  @db.VarChar(255)
+  wifiPassword   String?  @db.VarChar(255)
+  checkInTime    String?  @db.VarChar(10) // HH:MM
+  checkOutTime   String?  @db.VarChar(10)
+  instructions   String?  @db.Text // step-by-step check-in instructions
+  houseRules     String?  @db.Text
+  parkingInfo    String?  @db.Text
+  emergencyContact String? @db.VarChar(255)
+  guidebookUrl   String?  @db.VarChar(1000) // link to digital guidebook
+  isActive       Boolean  @default(true)
+  viewedAt       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, propertyId])
+  @@index([reservationId])
+}
+
+// ==========================================
+// Key / Access Management
+// ==========================================
+
+model KeyHandover {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  keyType        String   @db.VarChar(50) // physical, smart_lock, keybox, garage_opener, gate_remote
+  keyIdentifier  String   @db.VarChar(255) // key number, lock code, etc.
+  assignedTo     String?  @db.VarChar(255)
+  assignedDate   DateTime?
+  returnedDate   DateTime?
+  status         String   @default("available") @db.VarChar(50) // available, assigned, returned, lost, deactivated
+  notes          String?  @db.Text
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Team Shift Scheduling
+// ==========================================
+
+model TeamShift {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String?
+  property       Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  assignee       String   @db.VarChar(255)
+  date           DateTime @db.Date
+  startTime      String   @db.VarChar(10) // HH:MM
+  endTime        String   @db.VarChar(10)
+  type           String   @db.VarChar(50) // cleaning, maintenance, check_in, check_out, inspection, general
+  status         String   @default("scheduled") @db.VarChar(50) // scheduled, in_progress, completed, cancelled, no_show
+  notes          String?  @db.Text
+  hoursWorked    Float?
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, date])
+  @@index([organizationId, assignee])
+  @@index([propertyId])
+}
+
+// ==========================================
+// Tax Reports
+// ==========================================
+
+model TaxReport {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String   @db.VarChar(255)
+  period         String   @db.VarChar(50) // monthly, quarterly, annual
+  year           Int
+  quarter        Int?     // 1-4 for quarterly
+  month          Int?     // 1-12 for monthly
+  totalIncome    Float    @default(0)
+  totalExpenses  Float    @default(0)
+  netIncome      Float    @default(0)
+  taxableAmount  Float    @default(0)
+  taxRate        Float?   // percentage
+  estimatedTax   Float    @default(0)
+  deductions     Json?    // { category: string, amount: number }[]
+  propertyBreakdown Json? // { propertyId: string, propertyName: string, income: number, expenses: number }[]
+  status         String   @default("draft") @db.VarChar(50) // draft, finalized, filed
+  notes          String?  @db.Text
+  filedAt        DateTime?
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, year])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Guest Feedback Surveys
+// ==========================================
+
+model GuestFeedback {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reservationId  String?  @db.VarChar(255)
+  guestName      String?  @db.VarChar(255)
+  guestEmail     String?  @db.VarChar(255)
+  overallRating  Int      // 1-5
+  cleanlinessRating Int?  // 1-5
+  communicationRating Int? // 1-5
+  locationRating Int?     // 1-5
+  valueRating    Int?     // 1-5
+  amenitiesRating Int?    // 1-5
+  comments       String?  @db.Text
+  improvements   String?  @db.Text
+  wouldRecommend Boolean?
+  source         String   @default("internal") @db.VarChar(50) // internal, email, sms, qr_code
+  status         String   @default("received") @db.VarChar(50) // pending, received, reviewed, archived
+  respondedAt    DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Security Deposit Tracker
+// ==========================================
+
+model SecurityDeposit {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reservationId  String?  @db.VarChar(255)
+  guestName      String   @db.VarChar(255)
+  amount         Float
+  currency       String   @default("USD") @db.VarChar(10)
+  status         String   @default("held") @db.VarChar(50) // held, partially_refunded, refunded, claimed, disputed
+  collectedDate  DateTime @db.Date
+  refundDate     DateTime? @db.Date
+  refundAmount   Float?
+  claimAmount    Float?
+  claimReason    String?  @db.Text
+  damagePhotos   Json?    // string[] urls
+  notes          String?  @db.Text
+  createdBy      String   @db.VarChar(255)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, propertyId])
+}
+
+// ==========================================
+// Rate Parity Checks
+// ==========================================
+
+model RateParityCheck {
+  id             String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId     String
+  property       Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  checkDate      DateTime @db.Date
+  channels       Json     // { channel: string, price: number, available: boolean }[]
+  basePrice      Float?   // your direct price
+  lowestPrice    Float?
+  highestPrice   Float?
+  priceDiffPct   Float?   // max difference as percentage
+  parityStatus   String   @db.VarChar(50) // in_parity, minor_diff, major_diff
+  notes          String?  @db.Text
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, checkDate])
+}
+
+// ==========================================
+// Competitor Rate Monitoring
+// ==========================================
+
+model CompetitorRate {
+  id               String   @id @default(cuid())
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId       String
+  property         Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  competitorName   String   @db.VarChar(255)
+  competitorUrl    String?  @db.VarChar(500)
+  platform         String   @db.VarChar(100) // airbnb, booking, vrbo, direct
+  competitorPrice  Float
+  yourPrice        Float
+  priceDiff        Float    // competitor - yours
+  priceDiffPct     Float    // percentage difference
+  checkDate        DateTime @db.Date
+  checkInDate      DateTime @db.Date
+  checkOutDate     DateTime @db.Date
+  guests           Int?
+  bedrooms         Int?
+  rating           Float?
+  reviewCount      Int?
+  notes            String?  @db.Text
+  createdAt        DateTime @default(now())
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, checkDate])
+}
+
+// ==========================================
+// Guest Loyalty Program
+// ==========================================
+
+model LoyaltyMember {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  guestName       String   @db.VarChar(255)
+  guestEmail      String   @db.VarChar(255)
+  phone           String?  @db.VarChar(50)
+  tier            String   @default("bronze") @db.VarChar(50) // bronze, silver, gold, platinum
+  totalStays      Int      @default(0)
+  totalSpent      Float    @default(0)
+  pointsBalance   Int      @default(0)
+  pointsEarned    Int      @default(0)
+  pointsRedeemed  Int      @default(0)
+  lastStayDate    DateTime? @db.Date
+  enrolledAt      DateTime @default(now())
+  notes           String?  @db.Text
+  status          String   @default("active") @db.VarChar(50) // active, inactive, suspended
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([organizationId, guestEmail])
+  @@index([organizationId, tier])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Insurance Management
+// ==========================================
+
+model InsurancePolicy {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  policyNumber    String   @db.VarChar(100)
+  provider        String   @db.VarChar(255)
+  type            String   @db.VarChar(100) // property, liability, contents, loss_of_income, umbrella
+  coverageAmount  Float
+  premiumAmount   Float
+  premiumFrequency String  @db.VarChar(50) // monthly, quarterly, annually
+  deductible      Float?
+  startDate       DateTime @db.Date
+  endDate         DateTime @db.Date
+  status          String   @default("active") @db.VarChar(50) // active, expired, cancelled, pending_renewal
+  claimCount      Int      @default(0)
+  totalClaimed    Float    @default(0)
+  contactName     String?  @db.VarChar(255)
+  contactPhone    String?  @db.VarChar(50)
+  contactEmail    String?  @db.VarChar(255)
+  notes           String?  @db.Text
+  documents       Json?    // string[] - document URLs/references
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, status])
+  @@index([organizationId, endDate])
+}
+
+// ==========================================
+// Utility Cost Tracking
+// ==========================================
+
+model UtilityBill {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  utilityType     String   @db.VarChar(100) // electric, water, gas, internet, trash, sewer, cable
+  provider        String?  @db.VarChar(255)
+  accountNumber   String?  @db.VarChar(100)
+  billingPeriodStart DateTime @db.Date
+  billingPeriodEnd   DateTime @db.Date
+  amount          Float
+  currency        String   @default("USD") @db.VarChar(10)
+  usage           Float?   // kWh, gallons, therms, etc.
+  usageUnit       String?  @db.VarChar(50)
+  dueDate         DateTime? @db.Date
+  paidDate        DateTime? @db.Date
+  status          String   @default("pending") @db.VarChar(50) // pending, paid, overdue, disputed
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, utilityType])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Dynamic Pricing Recommendations
+// ==========================================
+
+model PricingRecommendation {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  date            DateTime @db.Date
+  currentPrice    Float
+  recommendedPrice Float
+  minPrice        Float?
+  maxPrice        Float?
+  confidence      Float?   // 0-1 confidence score
+  reason          String   @db.Text // explanation of recommendation
+  factors         Json?    // { demand: number, seasonality: number, competitors: number, events: string[] }
+  status          String   @default("pending") @db.VarChar(50) // pending, accepted, rejected, expired
+  acceptedAt      DateTime?
+  rejectedAt      DateTime?
+  createdAt       DateTime @default(now())
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, date])
+  @@index([organizationId, status])
+}
+
+// ==========================================
+// Staff Payroll Tracking
+// ==========================================
+
+model StaffPayroll {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  staffName       String   @db.VarChar(255)
+  staffEmail      String?  @db.VarChar(255)
+  role            String   @db.VarChar(100) // cleaner, maintenance, manager, front_desk, other
+  payType         String   @db.VarChar(50) // hourly, salary, per_task, commission
+  payRate         Float
+  currency        String   @default("USD") @db.VarChar(10)
+  hoursWorked     Float?
+  tasksCompleted  Int?
+  grossAmount     Float
+  deductions      Float    @default(0)
+  netAmount       Float
+  periodStart     DateTime @db.Date
+  periodEnd       DateTime @db.Date
+  paidDate        DateTime? @db.Date
+  status          String   @default("pending") @db.VarChar(50) // pending, approved, paid, cancelled
+  notes           String?  @db.Text
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId, staffName])
+  @@index([organizationId, status])
+  @@index([organizationId, periodEnd])
+}
+
+// ==========================================
+// Channel Manager Sync Status
+// ==========================================
+
+model ChannelSyncLog {
+  id              String   @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  propertyId      String
+  property        Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  channel         String   @db.VarChar(100) // airbnb, booking, vrbo, expedia, etc.
+  syncType        String   @db.VarChar(50) // availability, pricing, reservations, content
+  status          String   @db.VarChar(50) // success, failed, partial, in_progress
+  recordsSynced   Int?     @default(0)
+  errors          Json?    // { code: string, message: string }[]
+  startedAt       DateTime @default(now())
+  completedAt     DateTime?
+  duration        Int?     // milliseconds
+  details         String?  @db.Text
+  createdAt       DateTime @default(now())
+
+  @@index([organizationId, propertyId])
+  @@index([organizationId, channel])
+  @@index([organizationId, status])
+  @@index([organizationId, startedAt])
+}

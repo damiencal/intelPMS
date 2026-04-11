@@ -1,4 +1,5 @@
 import { useLayout } from '@/context/layout-provider'
+import { useAuthStore } from '@/stores/auth-store'
 import {
   Sidebar,
   SidebarContent,
@@ -14,14 +15,21 @@ import { TeamSwitcher } from './team-switcher'
 
 export function AppSidebar() {
   const { collapsible, variant } = useLayout()
+  const { auth } = useAuthStore()
+
+  // Use real user data from session if available
+  const user = auth.user
+    ? {
+        name: auth.user.name,
+        email: auth.user.email,
+        avatar: '/avatars/shadcn.jpg',
+      }
+    : sidebarData.user
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
         <TeamSwitcher teams={sidebarData.teams} />
-
-        {/* Replace <TeamSwitch /> with the following <AppTitle />
-         /* if you want to use the normal app title instead of TeamSwitch dropdown */}
-        {/* <AppTitle /> */}
       </SidebarHeader>
       <SidebarContent>
         {sidebarData.navGroups.map((props) => (
@@ -29,7 +37,7 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={sidebarData.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

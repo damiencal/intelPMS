@@ -25,19 +25,52 @@ import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-p
 import { Route as ClerkAuthenticatedRouteRouteImport } from './routes/clerk/_authenticated/route'
 import { Route as ClerkauthRouteRouteImport } from './routes/clerk/(auth)/route'
 import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authenticated/settings/route'
+import { Route as AuthenticatedVendorsIndexRouteImport } from './routes/_authenticated/vendors/index'
+import { Route as AuthenticatedUtilitiesIndexRouteImport } from './routes/_authenticated/utilities/index'
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
+import { Route as AuthenticatedTeamShiftsIndexRouteImport } from './routes/_authenticated/team-shifts/index'
+import { Route as AuthenticatedTaxReportsIndexRouteImport } from './routes/_authenticated/tax-reports/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedSecurityDepositsIndexRouteImport } from './routes/_authenticated/security-deposits/index'
+import { Route as AuthenticatedReviewsIndexRouteImport } from './routes/_authenticated/reviews/index'
+import { Route as AuthenticatedRevenueForecastIndexRouteImport } from './routes/_authenticated/revenue-forecast/index'
+import { Route as AuthenticatedReservationsIndexRouteImport } from './routes/_authenticated/reservations/index'
+import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authenticated/reports/index'
+import { Route as AuthenticatedRateParityIndexRouteImport } from './routes/_authenticated/rate-parity/index'
+import { Route as AuthenticatedPropertyComparisonIndexRouteImport } from './routes/_authenticated/property-comparison/index'
+import { Route as AuthenticatedPropertiesIndexRouteImport } from './routes/_authenticated/properties/index'
+import { Route as AuthenticatedOwnerStatementsIndexRouteImport } from './routes/_authenticated/owner-statements/index'
+import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
+import { Route as AuthenticatedMessagingIndexRouteImport } from './routes/_authenticated/messaging/index'
+import { Route as AuthenticatedMaintenanceIndexRouteImport } from './routes/_authenticated/maintenance/index'
+import { Route as AuthenticatedLoyaltyIndexRouteImport } from './routes/_authenticated/loyalty/index'
+import { Route as AuthenticatedKeyHandoversIndexRouteImport } from './routes/_authenticated/key-handovers/index'
+import { Route as AuthenticatedInventoryIndexRouteImport } from './routes/_authenticated/inventory/index'
+import { Route as AuthenticatedInsuranceIndexRouteImport } from './routes/_authenticated/insurance/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
+import { Route as AuthenticatedGuestFeedbackIndexRouteImport } from './routes/_authenticated/guest-feedback/index'
+import { Route as AuthenticatedGuestCheckinsIndexRouteImport } from './routes/_authenticated/guest-checkins/index'
+import { Route as AuthenticatedExpensesIndexRouteImport } from './routes/_authenticated/expenses/index'
+import { Route as AuthenticatedDocumentsIndexRouteImport } from './routes/_authenticated/documents/index'
+import { Route as AuthenticatedCompetitorRatesIndexRouteImport } from './routes/_authenticated/competitor-rates/index'
+import { Route as AuthenticatedCleaningIndexRouteImport } from './routes/_authenticated/cleaning/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
+import { Route as AuthenticatedAutoMessagesIndexRouteImport } from './routes/_authenticated/auto-messages/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
+import { Route as AuthenticatedAnalyticsIndexRouteImport } from './routes/_authenticated/analytics/index'
 import { Route as ClerkAuthenticatedUserManagementRouteImport } from './routes/clerk/_authenticated/user-management'
 import { Route as ClerkauthSignUpRouteImport } from './routes/clerk/(auth)/sign-up'
 import { Route as ClerkauthSignInRouteImport } from './routes/clerk/(auth)/sign-in'
 import { Route as AuthenticatedSettingsNotificationsRouteImport } from './routes/_authenticated/settings/notifications'
 import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_authenticated/settings/display'
+import { Route as AuthenticatedSettingsConnectionsRouteImport } from './routes/_authenticated/settings/connections'
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
+import { Route as AuthenticatedPropertiesPropertyIdRouteImport } from './routes/_authenticated/properties/$propertyId'
+import { Route as AuthenticatedPricingSeasonalRouteImport } from './routes/_authenticated/pricing/seasonal'
+import { Route as AuthenticatedPricingRulesRouteImport } from './routes/_authenticated/pricing/rules'
+import { Route as AuthenticatedPricingProposalsRouteImport } from './routes/_authenticated/pricing/proposals'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
@@ -118,11 +151,35 @@ const AuthenticatedSettingsRouteRoute =
     path: '/settings',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedVendorsIndexRoute =
+  AuthenticatedVendorsIndexRouteImport.update({
+    id: '/vendors/',
+    path: '/vendors/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUtilitiesIndexRoute =
+  AuthenticatedUtilitiesIndexRouteImport.update({
+    id: '/utilities/',
+    path: '/utilities/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedUsersIndexRoute = AuthenticatedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTeamShiftsIndexRoute =
+  AuthenticatedTeamShiftsIndexRouteImport.update({
+    id: '/team-shifts/',
+    path: '/team-shifts/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTaxReportsIndexRoute =
+  AuthenticatedTaxReportsIndexRouteImport.update({
+    id: '/tax-reports/',
+    path: '/tax-reports/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   id: '/tasks/',
   path: '/tasks/',
@@ -134,10 +191,142 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSecurityDepositsIndexRoute =
+  AuthenticatedSecurityDepositsIndexRouteImport.update({
+    id: '/security-deposits/',
+    path: '/security-deposits/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReviewsIndexRoute =
+  AuthenticatedReviewsIndexRouteImport.update({
+    id: '/reviews/',
+    path: '/reviews/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRevenueForecastIndexRoute =
+  AuthenticatedRevenueForecastIndexRouteImport.update({
+    id: '/revenue-forecast/',
+    path: '/revenue-forecast/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReservationsIndexRoute =
+  AuthenticatedReservationsIndexRouteImport.update({
+    id: '/reservations/',
+    path: '/reservations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedReportsIndexRoute =
+  AuthenticatedReportsIndexRouteImport.update({
+    id: '/reports/',
+    path: '/reports/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedRateParityIndexRoute =
+  AuthenticatedRateParityIndexRouteImport.update({
+    id: '/rate-parity/',
+    path: '/rate-parity/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPropertyComparisonIndexRoute =
+  AuthenticatedPropertyComparisonIndexRouteImport.update({
+    id: '/property-comparison/',
+    path: '/property-comparison/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPropertiesIndexRoute =
+  AuthenticatedPropertiesIndexRouteImport.update({
+    id: '/properties/',
+    path: '/properties/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedOwnerStatementsIndexRoute =
+  AuthenticatedOwnerStatementsIndexRouteImport.update({
+    id: '/owner-statements/',
+    path: '/owner-statements/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNotificationsIndexRoute =
+  AuthenticatedNotificationsIndexRouteImport.update({
+    id: '/notifications/',
+    path: '/notifications/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMessagingIndexRoute =
+  AuthenticatedMessagingIndexRouteImport.update({
+    id: '/messaging/',
+    path: '/messaging/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMaintenanceIndexRoute =
+  AuthenticatedMaintenanceIndexRouteImport.update({
+    id: '/maintenance/',
+    path: '/maintenance/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLoyaltyIndexRoute =
+  AuthenticatedLoyaltyIndexRouteImport.update({
+    id: '/loyalty/',
+    path: '/loyalty/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKeyHandoversIndexRoute =
+  AuthenticatedKeyHandoversIndexRouteImport.update({
+    id: '/key-handovers/',
+    path: '/key-handovers/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInventoryIndexRoute =
+  AuthenticatedInventoryIndexRouteImport.update({
+    id: '/inventory/',
+    path: '/inventory/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedInsuranceIndexRoute =
+  AuthenticatedInsuranceIndexRouteImport.update({
+    id: '/insurance/',
+    path: '/insurance/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
     path: '/help-center/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGuestFeedbackIndexRoute =
+  AuthenticatedGuestFeedbackIndexRouteImport.update({
+    id: '/guest-feedback/',
+    path: '/guest-feedback/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGuestCheckinsIndexRoute =
+  AuthenticatedGuestCheckinsIndexRouteImport.update({
+    id: '/guest-checkins/',
+    path: '/guest-checkins/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedExpensesIndexRoute =
+  AuthenticatedExpensesIndexRouteImport.update({
+    id: '/expenses/',
+    path: '/expenses/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedDocumentsIndexRoute =
+  AuthenticatedDocumentsIndexRouteImport.update({
+    id: '/documents/',
+    path: '/documents/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCompetitorRatesIndexRoute =
+  AuthenticatedCompetitorRatesIndexRouteImport.update({
+    id: '/competitor-rates/',
+    path: '/competitor-rates/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCleaningIndexRoute =
+  AuthenticatedCleaningIndexRouteImport.update({
+    id: '/cleaning/',
+    path: '/cleaning/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
@@ -145,11 +334,23 @@ const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   path: '/chats/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAutoMessagesIndexRoute =
+  AuthenticatedAutoMessagesIndexRouteImport.update({
+    id: '/auto-messages/',
+    path: '/auto-messages/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAppsIndexRoute = AuthenticatedAppsIndexRouteImport.update({
   id: '/apps/',
   path: '/apps/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAnalyticsIndexRoute =
+  AuthenticatedAnalyticsIndexRouteImport.update({
+    id: '/analytics/',
+    path: '/analytics/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ClerkAuthenticatedUserManagementRoute =
   ClerkAuthenticatedUserManagementRouteImport.update({
     id: '/user-management',
@@ -178,6 +379,12 @@ const AuthenticatedSettingsDisplayRoute =
     path: '/display',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedSettingsConnectionsRoute =
+  AuthenticatedSettingsConnectionsRouteImport.update({
+    id: '/connections',
+    path: '/connections',
+    getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
 const AuthenticatedSettingsAppearanceRoute =
   AuthenticatedSettingsAppearanceRouteImport.update({
     id: '/appearance',
@@ -189,6 +396,30 @@ const AuthenticatedSettingsAccountRoute =
     id: '/account',
     path: '/account',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
+  } as any)
+const AuthenticatedPropertiesPropertyIdRoute =
+  AuthenticatedPropertiesPropertyIdRouteImport.update({
+    id: '/properties/$propertyId',
+    path: '/properties/$propertyId',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPricingSeasonalRoute =
+  AuthenticatedPricingSeasonalRouteImport.update({
+    id: '/pricing/seasonal',
+    path: '/pricing/seasonal',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPricingRulesRoute =
+  AuthenticatedPricingRulesRouteImport.update({
+    id: '/pricing/rules',
+    path: '/pricing/rules',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPricingProposalsRoute =
+  AuthenticatedPricingProposalsRouteImport.update({
+    id: '/pricing/proposals',
+    path: '/pricing/proposals',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedErrorsErrorRoute =
   AuthenticatedErrorsErrorRouteImport.update({
@@ -212,19 +443,52 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/pricing/proposals': typeof AuthenticatedPricingProposalsRoute
+  '/pricing/rules': typeof AuthenticatedPricingRulesRoute
+  '/pricing/seasonal': typeof AuthenticatedPricingSeasonalRoute
+  '/properties/$propertyId': typeof AuthenticatedPropertiesPropertyIdRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/analytics': typeof AuthenticatedAnalyticsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
+  '/auto-messages': typeof AuthenticatedAutoMessagesIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/cleaning': typeof AuthenticatedCleaningIndexRoute
+  '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/documents': typeof AuthenticatedDocumentsIndexRoute
+  '/expenses': typeof AuthenticatedExpensesIndexRoute
+  '/guest-checkins': typeof AuthenticatedGuestCheckinsIndexRoute
+  '/guest-feedback': typeof AuthenticatedGuestFeedbackIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/insurance': typeof AuthenticatedInsuranceIndexRoute
+  '/inventory': typeof AuthenticatedInventoryIndexRoute
+  '/key-handovers': typeof AuthenticatedKeyHandoversIndexRoute
+  '/loyalty': typeof AuthenticatedLoyaltyIndexRoute
+  '/maintenance': typeof AuthenticatedMaintenanceIndexRoute
+  '/messaging': typeof AuthenticatedMessagingIndexRoute
+  '/notifications': typeof AuthenticatedNotificationsIndexRoute
+  '/owner-statements': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/properties': typeof AuthenticatedPropertiesIndexRoute
+  '/property-comparison': typeof AuthenticatedPropertyComparisonIndexRoute
+  '/rate-parity': typeof AuthenticatedRateParityIndexRoute
+  '/reports': typeof AuthenticatedReportsIndexRoute
+  '/reservations': typeof AuthenticatedReservationsIndexRoute
+  '/revenue-forecast': typeof AuthenticatedRevenueForecastIndexRoute
+  '/reviews': typeof AuthenticatedReviewsIndexRoute
+  '/security-deposits': typeof AuthenticatedSecurityDepositsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/tax-reports': typeof AuthenticatedTaxReportsIndexRoute
+  '/team-shifts': typeof AuthenticatedTeamShiftsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/utilities': typeof AuthenticatedUtilitiesIndexRoute
+  '/vendors': typeof AuthenticatedVendorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -240,19 +504,52 @@ export interface FileRoutesByTo {
   '/503': typeof errors503Route
   '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/pricing/proposals': typeof AuthenticatedPricingProposalsRoute
+  '/pricing/rules': typeof AuthenticatedPricingRulesRoute
+  '/pricing/seasonal': typeof AuthenticatedPricingSeasonalRoute
+  '/properties/$propertyId': typeof AuthenticatedPropertiesPropertyIdRoute
   '/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/analytics': typeof AuthenticatedAnalyticsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
+  '/auto-messages': typeof AuthenticatedAutoMessagesIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
+  '/cleaning': typeof AuthenticatedCleaningIndexRoute
+  '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/documents': typeof AuthenticatedDocumentsIndexRoute
+  '/expenses': typeof AuthenticatedExpensesIndexRoute
+  '/guest-checkins': typeof AuthenticatedGuestCheckinsIndexRoute
+  '/guest-feedback': typeof AuthenticatedGuestFeedbackIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/insurance': typeof AuthenticatedInsuranceIndexRoute
+  '/inventory': typeof AuthenticatedInventoryIndexRoute
+  '/key-handovers': typeof AuthenticatedKeyHandoversIndexRoute
+  '/loyalty': typeof AuthenticatedLoyaltyIndexRoute
+  '/maintenance': typeof AuthenticatedMaintenanceIndexRoute
+  '/messaging': typeof AuthenticatedMessagingIndexRoute
+  '/notifications': typeof AuthenticatedNotificationsIndexRoute
+  '/owner-statements': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/properties': typeof AuthenticatedPropertiesIndexRoute
+  '/property-comparison': typeof AuthenticatedPropertyComparisonIndexRoute
+  '/rate-parity': typeof AuthenticatedRateParityIndexRoute
+  '/reports': typeof AuthenticatedReportsIndexRoute
+  '/reservations': typeof AuthenticatedReservationsIndexRoute
+  '/revenue-forecast': typeof AuthenticatedRevenueForecastIndexRoute
+  '/reviews': typeof AuthenticatedReviewsIndexRoute
+  '/security-deposits': typeof AuthenticatedSecurityDepositsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
+  '/tax-reports': typeof AuthenticatedTaxReportsIndexRoute
+  '/team-shifts': typeof AuthenticatedTeamShiftsIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/utilities': typeof AuthenticatedUtilitiesIndexRoute
+  '/vendors': typeof AuthenticatedVendorsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -273,19 +570,52 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503Route
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
+  '/_authenticated/pricing/proposals': typeof AuthenticatedPricingProposalsRoute
+  '/_authenticated/pricing/rules': typeof AuthenticatedPricingRulesRoute
+  '/_authenticated/pricing/seasonal': typeof AuthenticatedPricingSeasonalRoute
+  '/_authenticated/properties/$propertyId': typeof AuthenticatedPropertiesPropertyIdRoute
   '/_authenticated/settings/account': typeof AuthenticatedSettingsAccountRoute
   '/_authenticated/settings/appearance': typeof AuthenticatedSettingsAppearanceRoute
+  '/_authenticated/settings/connections': typeof AuthenticatedSettingsConnectionsRoute
   '/_authenticated/settings/display': typeof AuthenticatedSettingsDisplayRoute
   '/_authenticated/settings/notifications': typeof AuthenticatedSettingsNotificationsRoute
   '/clerk/(auth)/sign-in': typeof ClerkauthSignInRoute
   '/clerk/(auth)/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/_authenticated/user-management': typeof ClerkAuthenticatedUserManagementRoute
+  '/_authenticated/analytics/': typeof AuthenticatedAnalyticsIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
+  '/_authenticated/auto-messages/': typeof AuthenticatedAutoMessagesIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
+  '/_authenticated/cleaning/': typeof AuthenticatedCleaningIndexRoute
+  '/_authenticated/competitor-rates/': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/_authenticated/documents/': typeof AuthenticatedDocumentsIndexRoute
+  '/_authenticated/expenses/': typeof AuthenticatedExpensesIndexRoute
+  '/_authenticated/guest-checkins/': typeof AuthenticatedGuestCheckinsIndexRoute
+  '/_authenticated/guest-feedback/': typeof AuthenticatedGuestFeedbackIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/insurance/': typeof AuthenticatedInsuranceIndexRoute
+  '/_authenticated/inventory/': typeof AuthenticatedInventoryIndexRoute
+  '/_authenticated/key-handovers/': typeof AuthenticatedKeyHandoversIndexRoute
+  '/_authenticated/loyalty/': typeof AuthenticatedLoyaltyIndexRoute
+  '/_authenticated/maintenance/': typeof AuthenticatedMaintenanceIndexRoute
+  '/_authenticated/messaging/': typeof AuthenticatedMessagingIndexRoute
+  '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
+  '/_authenticated/owner-statements/': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/_authenticated/properties/': typeof AuthenticatedPropertiesIndexRoute
+  '/_authenticated/property-comparison/': typeof AuthenticatedPropertyComparisonIndexRoute
+  '/_authenticated/rate-parity/': typeof AuthenticatedRateParityIndexRoute
+  '/_authenticated/reports/': typeof AuthenticatedReportsIndexRoute
+  '/_authenticated/reservations/': typeof AuthenticatedReservationsIndexRoute
+  '/_authenticated/revenue-forecast/': typeof AuthenticatedRevenueForecastIndexRoute
+  '/_authenticated/reviews/': typeof AuthenticatedReviewsIndexRoute
+  '/_authenticated/security-deposits/': typeof AuthenticatedSecurityDepositsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/_authenticated/tax-reports/': typeof AuthenticatedTaxReportsIndexRoute
+  '/_authenticated/team-shifts/': typeof AuthenticatedTeamShiftsIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/utilities/': typeof AuthenticatedUtilitiesIndexRoute
+  '/_authenticated/vendors/': typeof AuthenticatedVendorsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -304,19 +634,52 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/pricing/proposals'
+    | '/pricing/rules'
+    | '/pricing/seasonal'
+    | '/properties/$propertyId'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/connections'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/analytics'
     | '/apps'
+    | '/auto-messages'
     | '/chats'
+    | '/cleaning'
+    | '/competitor-rates'
+    | '/documents'
+    | '/expenses'
+    | '/guest-checkins'
+    | '/guest-feedback'
     | '/help-center'
+    | '/insurance'
+    | '/inventory'
+    | '/key-handovers'
+    | '/loyalty'
+    | '/maintenance'
+    | '/messaging'
+    | '/notifications'
+    | '/owner-statements'
+    | '/properties'
+    | '/property-comparison'
+    | '/rate-parity'
+    | '/reports'
+    | '/reservations'
+    | '/revenue-forecast'
+    | '/reviews'
+    | '/security-deposits'
     | '/settings/'
     | '/tasks'
+    | '/tax-reports'
+    | '/team-shifts'
     | '/users'
+    | '/utilities'
+    | '/vendors'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -332,19 +695,52 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/errors/$error'
+    | '/pricing/proposals'
+    | '/pricing/rules'
+    | '/pricing/seasonal'
+    | '/properties/$propertyId'
     | '/settings/account'
     | '/settings/appearance'
+    | '/settings/connections'
     | '/settings/display'
     | '/settings/notifications'
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
+    | '/analytics'
     | '/apps'
+    | '/auto-messages'
     | '/chats'
+    | '/cleaning'
+    | '/competitor-rates'
+    | '/documents'
+    | '/expenses'
+    | '/guest-checkins'
+    | '/guest-feedback'
     | '/help-center'
+    | '/insurance'
+    | '/inventory'
+    | '/key-handovers'
+    | '/loyalty'
+    | '/maintenance'
+    | '/messaging'
+    | '/notifications'
+    | '/owner-statements'
+    | '/properties'
+    | '/property-comparison'
+    | '/rate-parity'
+    | '/reports'
+    | '/reservations'
+    | '/revenue-forecast'
+    | '/reviews'
+    | '/security-deposits'
     | '/settings'
     | '/tasks'
+    | '/tax-reports'
+    | '/team-shifts'
     | '/users'
+    | '/utilities'
+    | '/vendors'
   id:
     | '__root__'
     | '/_authenticated'
@@ -364,19 +760,52 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/errors/$error'
+    | '/_authenticated/pricing/proposals'
+    | '/_authenticated/pricing/rules'
+    | '/_authenticated/pricing/seasonal'
+    | '/_authenticated/properties/$propertyId'
     | '/_authenticated/settings/account'
     | '/_authenticated/settings/appearance'
+    | '/_authenticated/settings/connections'
     | '/_authenticated/settings/display'
     | '/_authenticated/settings/notifications'
     | '/clerk/(auth)/sign-in'
     | '/clerk/(auth)/sign-up'
     | '/clerk/_authenticated/user-management'
+    | '/_authenticated/analytics/'
     | '/_authenticated/apps/'
+    | '/_authenticated/auto-messages/'
     | '/_authenticated/chats/'
+    | '/_authenticated/cleaning/'
+    | '/_authenticated/competitor-rates/'
+    | '/_authenticated/documents/'
+    | '/_authenticated/expenses/'
+    | '/_authenticated/guest-checkins/'
+    | '/_authenticated/guest-feedback/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/insurance/'
+    | '/_authenticated/inventory/'
+    | '/_authenticated/key-handovers/'
+    | '/_authenticated/loyalty/'
+    | '/_authenticated/maintenance/'
+    | '/_authenticated/messaging/'
+    | '/_authenticated/notifications/'
+    | '/_authenticated/owner-statements/'
+    | '/_authenticated/properties/'
+    | '/_authenticated/property-comparison/'
+    | '/_authenticated/rate-parity/'
+    | '/_authenticated/reports/'
+    | '/_authenticated/reservations/'
+    | '/_authenticated/revenue-forecast/'
+    | '/_authenticated/reviews/'
+    | '/_authenticated/security-deposits/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
+    | '/_authenticated/tax-reports/'
+    | '/_authenticated/team-shifts/'
     | '/_authenticated/users/'
+    | '/_authenticated/utilities/'
+    | '/_authenticated/vendors/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -508,11 +937,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/vendors/': {
+      id: '/_authenticated/vendors/'
+      path: '/vendors'
+      fullPath: '/vendors'
+      preLoaderRoute: typeof AuthenticatedVendorsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/utilities/': {
+      id: '/_authenticated/utilities/'
+      path: '/utilities'
+      fullPath: '/utilities'
+      preLoaderRoute: typeof AuthenticatedUtilitiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
       fullPath: '/users'
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/team-shifts/': {
+      id: '/_authenticated/team-shifts/'
+      path: '/team-shifts'
+      fullPath: '/team-shifts'
+      preLoaderRoute: typeof AuthenticatedTeamShiftsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/tax-reports/': {
+      id: '/_authenticated/tax-reports/'
+      path: '/tax-reports'
+      fullPath: '/tax-reports'
+      preLoaderRoute: typeof AuthenticatedTaxReportsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tasks/': {
@@ -529,11 +986,165 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/security-deposits/': {
+      id: '/_authenticated/security-deposits/'
+      path: '/security-deposits'
+      fullPath: '/security-deposits'
+      preLoaderRoute: typeof AuthenticatedSecurityDepositsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reviews/': {
+      id: '/_authenticated/reviews/'
+      path: '/reviews'
+      fullPath: '/reviews'
+      preLoaderRoute: typeof AuthenticatedReviewsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/revenue-forecast/': {
+      id: '/_authenticated/revenue-forecast/'
+      path: '/revenue-forecast'
+      fullPath: '/revenue-forecast'
+      preLoaderRoute: typeof AuthenticatedRevenueForecastIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reservations/': {
+      id: '/_authenticated/reservations/'
+      path: '/reservations'
+      fullPath: '/reservations'
+      preLoaderRoute: typeof AuthenticatedReservationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports/': {
+      id: '/_authenticated/reports/'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/rate-parity/': {
+      id: '/_authenticated/rate-parity/'
+      path: '/rate-parity'
+      fullPath: '/rate-parity'
+      preLoaderRoute: typeof AuthenticatedRateParityIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/property-comparison/': {
+      id: '/_authenticated/property-comparison/'
+      path: '/property-comparison'
+      fullPath: '/property-comparison'
+      preLoaderRoute: typeof AuthenticatedPropertyComparisonIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/properties/': {
+      id: '/_authenticated/properties/'
+      path: '/properties'
+      fullPath: '/properties'
+      preLoaderRoute: typeof AuthenticatedPropertiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/owner-statements/': {
+      id: '/_authenticated/owner-statements/'
+      path: '/owner-statements'
+      fullPath: '/owner-statements'
+      preLoaderRoute: typeof AuthenticatedOwnerStatementsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notifications/': {
+      id: '/_authenticated/notifications/'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AuthenticatedNotificationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/messaging/': {
+      id: '/_authenticated/messaging/'
+      path: '/messaging'
+      fullPath: '/messaging'
+      preLoaderRoute: typeof AuthenticatedMessagingIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/maintenance/': {
+      id: '/_authenticated/maintenance/'
+      path: '/maintenance'
+      fullPath: '/maintenance'
+      preLoaderRoute: typeof AuthenticatedMaintenanceIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/loyalty/': {
+      id: '/_authenticated/loyalty/'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof AuthenticatedLoyaltyIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/key-handovers/': {
+      id: '/_authenticated/key-handovers/'
+      path: '/key-handovers'
+      fullPath: '/key-handovers'
+      preLoaderRoute: typeof AuthenticatedKeyHandoversIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/inventory/': {
+      id: '/_authenticated/inventory/'
+      path: '/inventory'
+      fullPath: '/inventory'
+      preLoaderRoute: typeof AuthenticatedInventoryIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/insurance/': {
+      id: '/_authenticated/insurance/'
+      path: '/insurance'
+      fullPath: '/insurance'
+      preLoaderRoute: typeof AuthenticatedInsuranceIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
       fullPath: '/help-center'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/guest-feedback/': {
+      id: '/_authenticated/guest-feedback/'
+      path: '/guest-feedback'
+      fullPath: '/guest-feedback'
+      preLoaderRoute: typeof AuthenticatedGuestFeedbackIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/guest-checkins/': {
+      id: '/_authenticated/guest-checkins/'
+      path: '/guest-checkins'
+      fullPath: '/guest-checkins'
+      preLoaderRoute: typeof AuthenticatedGuestCheckinsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/expenses/': {
+      id: '/_authenticated/expenses/'
+      path: '/expenses'
+      fullPath: '/expenses'
+      preLoaderRoute: typeof AuthenticatedExpensesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/documents/': {
+      id: '/_authenticated/documents/'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AuthenticatedDocumentsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/competitor-rates/': {
+      id: '/_authenticated/competitor-rates/'
+      path: '/competitor-rates'
+      fullPath: '/competitor-rates'
+      preLoaderRoute: typeof AuthenticatedCompetitorRatesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cleaning/': {
+      id: '/_authenticated/cleaning/'
+      path: '/cleaning'
+      fullPath: '/cleaning'
+      preLoaderRoute: typeof AuthenticatedCleaningIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/chats/': {
@@ -543,11 +1154,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/auto-messages/': {
+      id: '/_authenticated/auto-messages/'
+      path: '/auto-messages'
+      fullPath: '/auto-messages'
+      preLoaderRoute: typeof AuthenticatedAutoMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/apps/': {
       id: '/_authenticated/apps/'
       path: '/apps'
       fullPath: '/apps'
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/analytics/': {
+      id: '/_authenticated/analytics/'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AuthenticatedAnalyticsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/clerk/_authenticated/user-management': {
@@ -585,6 +1210,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsDisplayRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/settings/connections': {
+      id: '/_authenticated/settings/connections'
+      path: '/connections'
+      fullPath: '/settings/connections'
+      preLoaderRoute: typeof AuthenticatedSettingsConnectionsRouteImport
+      parentRoute: typeof AuthenticatedSettingsRouteRoute
+    }
     '/_authenticated/settings/appearance': {
       id: '/_authenticated/settings/appearance'
       path: '/appearance'
@@ -599,6 +1231,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsAccountRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/properties/$propertyId': {
+      id: '/_authenticated/properties/$propertyId'
+      path: '/properties/$propertyId'
+      fullPath: '/properties/$propertyId'
+      preLoaderRoute: typeof AuthenticatedPropertiesPropertyIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pricing/seasonal': {
+      id: '/_authenticated/pricing/seasonal'
+      path: '/pricing/seasonal'
+      fullPath: '/pricing/seasonal'
+      preLoaderRoute: typeof AuthenticatedPricingSeasonalRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pricing/rules': {
+      id: '/_authenticated/pricing/rules'
+      path: '/pricing/rules'
+      fullPath: '/pricing/rules'
+      preLoaderRoute: typeof AuthenticatedPricingRulesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pricing/proposals': {
+      id: '/_authenticated/pricing/proposals'
+      path: '/pricing/proposals'
+      fullPath: '/pricing/proposals'
+      preLoaderRoute: typeof AuthenticatedPricingProposalsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/errors/$error': {
       id: '/_authenticated/errors/$error'
       path: '/errors/$error'
@@ -612,6 +1272,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedSettingsRouteRouteChildren {
   AuthenticatedSettingsAccountRoute: typeof AuthenticatedSettingsAccountRoute
   AuthenticatedSettingsAppearanceRoute: typeof AuthenticatedSettingsAppearanceRoute
+  AuthenticatedSettingsConnectionsRoute: typeof AuthenticatedSettingsConnectionsRoute
   AuthenticatedSettingsDisplayRoute: typeof AuthenticatedSettingsDisplayRoute
   AuthenticatedSettingsNotificationsRoute: typeof AuthenticatedSettingsNotificationsRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
@@ -621,6 +1282,8 @@ const AuthenticatedSettingsRouteRouteChildren: AuthenticatedSettingsRouteRouteCh
   {
     AuthenticatedSettingsAccountRoute: AuthenticatedSettingsAccountRoute,
     AuthenticatedSettingsAppearanceRoute: AuthenticatedSettingsAppearanceRoute,
+    AuthenticatedSettingsConnectionsRoute:
+      AuthenticatedSettingsConnectionsRoute,
     AuthenticatedSettingsDisplayRoute: AuthenticatedSettingsDisplayRoute,
     AuthenticatedSettingsNotificationsRoute:
       AuthenticatedSettingsNotificationsRoute,
@@ -636,22 +1299,92 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRouteRoute: typeof AuthenticatedSettingsRouteRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
+  AuthenticatedPricingProposalsRoute: typeof AuthenticatedPricingProposalsRoute
+  AuthenticatedPricingRulesRoute: typeof AuthenticatedPricingRulesRoute
+  AuthenticatedPricingSeasonalRoute: typeof AuthenticatedPricingSeasonalRoute
+  AuthenticatedPropertiesPropertyIdRoute: typeof AuthenticatedPropertiesPropertyIdRoute
+  AuthenticatedAnalyticsIndexRoute: typeof AuthenticatedAnalyticsIndexRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
+  AuthenticatedAutoMessagesIndexRoute: typeof AuthenticatedAutoMessagesIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
+  AuthenticatedCleaningIndexRoute: typeof AuthenticatedCleaningIndexRoute
+  AuthenticatedCompetitorRatesIndexRoute: typeof AuthenticatedCompetitorRatesIndexRoute
+  AuthenticatedDocumentsIndexRoute: typeof AuthenticatedDocumentsIndexRoute
+  AuthenticatedExpensesIndexRoute: typeof AuthenticatedExpensesIndexRoute
+  AuthenticatedGuestCheckinsIndexRoute: typeof AuthenticatedGuestCheckinsIndexRoute
+  AuthenticatedGuestFeedbackIndexRoute: typeof AuthenticatedGuestFeedbackIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedInsuranceIndexRoute: typeof AuthenticatedInsuranceIndexRoute
+  AuthenticatedInventoryIndexRoute: typeof AuthenticatedInventoryIndexRoute
+  AuthenticatedKeyHandoversIndexRoute: typeof AuthenticatedKeyHandoversIndexRoute
+  AuthenticatedLoyaltyIndexRoute: typeof AuthenticatedLoyaltyIndexRoute
+  AuthenticatedMaintenanceIndexRoute: typeof AuthenticatedMaintenanceIndexRoute
+  AuthenticatedMessagingIndexRoute: typeof AuthenticatedMessagingIndexRoute
+  AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
+  AuthenticatedOwnerStatementsIndexRoute: typeof AuthenticatedOwnerStatementsIndexRoute
+  AuthenticatedPropertiesIndexRoute: typeof AuthenticatedPropertiesIndexRoute
+  AuthenticatedPropertyComparisonIndexRoute: typeof AuthenticatedPropertyComparisonIndexRoute
+  AuthenticatedRateParityIndexRoute: typeof AuthenticatedRateParityIndexRoute
+  AuthenticatedReportsIndexRoute: typeof AuthenticatedReportsIndexRoute
+  AuthenticatedReservationsIndexRoute: typeof AuthenticatedReservationsIndexRoute
+  AuthenticatedRevenueForecastIndexRoute: typeof AuthenticatedRevenueForecastIndexRoute
+  AuthenticatedReviewsIndexRoute: typeof AuthenticatedReviewsIndexRoute
+  AuthenticatedSecurityDepositsIndexRoute: typeof AuthenticatedSecurityDepositsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
+  AuthenticatedTaxReportsIndexRoute: typeof AuthenticatedTaxReportsIndexRoute
+  AuthenticatedTeamShiftsIndexRoute: typeof AuthenticatedTeamShiftsIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedUtilitiesIndexRoute: typeof AuthenticatedUtilitiesIndexRoute
+  AuthenticatedVendorsIndexRoute: typeof AuthenticatedVendorsIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRouteRoute: AuthenticatedSettingsRouteRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
+  AuthenticatedPricingProposalsRoute: AuthenticatedPricingProposalsRoute,
+  AuthenticatedPricingRulesRoute: AuthenticatedPricingRulesRoute,
+  AuthenticatedPricingSeasonalRoute: AuthenticatedPricingSeasonalRoute,
+  AuthenticatedPropertiesPropertyIdRoute:
+    AuthenticatedPropertiesPropertyIdRoute,
+  AuthenticatedAnalyticsIndexRoute: AuthenticatedAnalyticsIndexRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
+  AuthenticatedAutoMessagesIndexRoute: AuthenticatedAutoMessagesIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
+  AuthenticatedCleaningIndexRoute: AuthenticatedCleaningIndexRoute,
+  AuthenticatedCompetitorRatesIndexRoute:
+    AuthenticatedCompetitorRatesIndexRoute,
+  AuthenticatedDocumentsIndexRoute: AuthenticatedDocumentsIndexRoute,
+  AuthenticatedExpensesIndexRoute: AuthenticatedExpensesIndexRoute,
+  AuthenticatedGuestCheckinsIndexRoute: AuthenticatedGuestCheckinsIndexRoute,
+  AuthenticatedGuestFeedbackIndexRoute: AuthenticatedGuestFeedbackIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedInsuranceIndexRoute: AuthenticatedInsuranceIndexRoute,
+  AuthenticatedInventoryIndexRoute: AuthenticatedInventoryIndexRoute,
+  AuthenticatedKeyHandoversIndexRoute: AuthenticatedKeyHandoversIndexRoute,
+  AuthenticatedLoyaltyIndexRoute: AuthenticatedLoyaltyIndexRoute,
+  AuthenticatedMaintenanceIndexRoute: AuthenticatedMaintenanceIndexRoute,
+  AuthenticatedMessagingIndexRoute: AuthenticatedMessagingIndexRoute,
+  AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
+  AuthenticatedOwnerStatementsIndexRoute:
+    AuthenticatedOwnerStatementsIndexRoute,
+  AuthenticatedPropertiesIndexRoute: AuthenticatedPropertiesIndexRoute,
+  AuthenticatedPropertyComparisonIndexRoute:
+    AuthenticatedPropertyComparisonIndexRoute,
+  AuthenticatedRateParityIndexRoute: AuthenticatedRateParityIndexRoute,
+  AuthenticatedReportsIndexRoute: AuthenticatedReportsIndexRoute,
+  AuthenticatedReservationsIndexRoute: AuthenticatedReservationsIndexRoute,
+  AuthenticatedRevenueForecastIndexRoute:
+    AuthenticatedRevenueForecastIndexRoute,
+  AuthenticatedReviewsIndexRoute: AuthenticatedReviewsIndexRoute,
+  AuthenticatedSecurityDepositsIndexRoute:
+    AuthenticatedSecurityDepositsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
+  AuthenticatedTaxReportsIndexRoute: AuthenticatedTaxReportsIndexRoute,
+  AuthenticatedTeamShiftsIndexRoute: AuthenticatedTeamShiftsIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedUtilitiesIndexRoute: AuthenticatedUtilitiesIndexRoute,
+  AuthenticatedVendorsIndexRoute: AuthenticatedVendorsIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

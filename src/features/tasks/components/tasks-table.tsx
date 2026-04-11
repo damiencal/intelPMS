@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react'
-import { getRouteApi } from '@tanstack/react-router'
+import { useState } from 'react'
 import {
+  type ColumnFiltersState,
+  type PaginationState,
   type SortingState,
   type VisibilityState,
   flexRender,
@@ -13,7 +14,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { cn } from '@/lib/utils'
-import { useTableUrlState } from '@/hooks/use-table-url-state'
 import {
   Table,
   TableBody,
@@ -28,42 +28,17 @@ import { type Task } from '../data/schema'
 import { DataTableBulkActions } from './data-table-bulk-actions'
 import { tasksColumns as columns } from './tasks-columns'
 
-const route = getRouteApi('/_authenticated/tasks/')
-
 type DataTableProps = {
   data: Task[]
 }
 
 export function TasksTable({ data }: DataTableProps) {
-  // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
-  // Local state management for table (uncomment to use local-only state, not synced with URL)
-  // const [globalFilter, onGlobalFilterChange] = useState('')
-  // const [columnFilters, onColumnFiltersChange] = useState<ColumnFiltersState>([])
-  // const [pagination, onPaginationChange] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
-
-  // Synced with URL states (updated to match route search schema defaults)
-  const {
-    globalFilter,
-    onGlobalFilterChange,
-    columnFilters,
-    onColumnFiltersChange,
-    pagination,
-    onPaginationChange,
-    ensurePageInRange,
-  } = useTableUrlState({
-    search: route.useSearch(),
-    navigate: route.useNavigate(),
-    pagination: { defaultPage: 1, defaultPageSize: 10 },
-    globalFilter: { enabled: true, key: 'filter' },
-    columnFilters: [
-      { columnId: 'status', searchKey: 'status', type: 'array' },
-      { columnId: 'priority', searchKey: 'priority', type: 'array' },
-    ],
-  })
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [globalFilter, setGlobalFilter] = useState('')
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -82,11 +57,9 @@ export function TasksTable({ data }: DataTableProps) {
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     globalFilterFn: (row, _columnId, filterValue) => {
-      const id = String(row.getValue('id')).toLowerCase()
       const title = String(row.getValue('title')).toLowerCase()
       const searchValue = String(filterValue).toLowerCase()
-
-      return id.includes(searchValue) || title.includes(searchValue)
+      return title.includes(searchValue)
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -94,15 +67,10 @@ export function TasksTable({ data }: DataTableProps) {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    onPaginationChange,
-    onGlobalFilterChange,
-    onColumnFiltersChange,
+    onPaginationChange: setPagination,
+    onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
   })
-
-  const pageCount = table.getPageCount()
-  useEffect(() => {
-    ensurePageInRange(pageCount)
-  }, [pageCount, ensurePageInRange])
 
   return (
     <div
@@ -113,7 +81,7 @@ export function TasksTable({ data }: DataTableProps) {
     >
       <DataTableToolbar
         table={table}
-        searchPlaceholder='Filter by title or ID...'
+        searchPlaceholder='Filter tasks...'
         filters={[
           {
             columnId: 'status',

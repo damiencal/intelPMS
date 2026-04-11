@@ -1,9 +1,9 @@
 import { z } from 'zod'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from '@tanstack/react-router'
-import { showSubmittedData } from '@/lib/show-submitted-data'
-import { cn } from '@/lib/utils'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import { api } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -15,162 +15,129 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
+import { Skeleton } from '@/components/ui/skeleton'
+
+interface UserProfile {
+  id: string
+  email: string
+  name: string
+  role: string
+  createdAt: string
+  organization: {
+    id: string
+    name: string
+    plan: string
+    timezone: string
+  }
+}
 
 const profileFormSchema = z.object({
-  username: z
-    .string('Please enter your username.')
-    .min(2, 'Username must be at least 2 characters.')
-    .max(30, 'Username must not be longer than 30 characters.'),
-  email: z.email({
-    error: (iss) =>
-      iss.input === undefined
-        ? 'Please select an email to display.'
-        : undefined,
-  }),
-  bio: z.string().max(160).min(4),
-  urls: z
-    .array(
-      z.object({
-        value: z.url('Please enter a valid URL.'),
-      })
-    )
-    .optional(),
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters.')
+    .max(100, 'Name must not be longer than 100 characters.'),
+  email: z.string().email('Please enter a valid email.'),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
-// This can come from your database or API.
-const defaultValues: Partial<ProfileFormValues> = {
-  bio: 'I own a computer.',
-  urls: [
-    { value: 'https://shadcn.com' },
-    { value: 'http://twitter.com/shadcn' },
-  ],
-}
-
 export function ProfileForm() {
+  const queryClient = useQueryClient()
+
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ['users', 'me'],
+    queryFn: () => api.get<{ data: UserProfile }>('/users/me'),
+    select: (res) => res.data,
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: (payload: ProfileFormValues) =>
+      api.patch<{ data: UserProfile }>('/users/me', payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+      toast.success('Profile updated successfully')
+    },
+    onError: () => {
+      toast.error('Failed to update profile')
+    },
+  })
+
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues,
-    mode: 'onChange',
+    values: profile
+      ? { name: profile.name, email: profile.email }
+      : { name: '', email: '' },
   })
 
-  const { fields, append } = useFieldArray({
-    name: 'urls',
-    control: form.control,
-  })
+  if (isLoading) {
+    return (
+      <div className='space-y-6'>
+        <Skeleton className='h-10 w-full' />
+        <Skeleton className='h-10 w-full' />
+        <Skeleton className='h-10 w-32' />
+      </div>
+    )
+  }
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) => showSubmittedData(data))}
-        className='space-y-8'
+        onSubmit={form.handleSubmit((data) => updateMutation.mutate(data))}
+        className='space-y-6'
       >
         <FormField
           control={form.control}
-          name='username'
+          name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder='shadcn' {...field} />
+                <Input placeholder='Your name' {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym. You can only change this once every 30 days.
+                This is your display name shown to team members.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name='email'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder='Select a verified email to display' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value='m@example.com'>m@example.com</SelectItem>
-                  <SelectItem value='m@google.com'>m@google.com</SelectItem>
-                  <SelectItem value='m@support.com'>m@support.com</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                You can manage verified email addresses in your{' '}
-                <Link to='/'>email settings</Link>.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name='bio'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bio</FormLabel>
               <FormControl>
-                <Textarea
-                  placeholder='Tell us a little bit about yourself'
-                  className='resize-none'
-                  {...field}
-                />
+                <Input type='email' placeholder='you@example.com' {...field} />
               </FormControl>
               <FormDescription>
-                You can <span>@mention</span> other users and organizations to
-                link to them.
+                Your login email. Changing this will require re-authentication.
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <div>
-          {fields.map((field, index) => (
-            <FormField
-              control={form.control}
-              key={field.id}
-              name={`urls.${index}.value`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className={cn(index !== 0 && 'sr-only')}>
-                    URLs
-                  </FormLabel>
-                  <FormDescription className={cn(index !== 0 && 'sr-only')}>
-                    Add links to your website, blog, or social media profiles.
-                  </FormDescription>
-                  <FormControl className={cn(index !== 0 && 'mt-1.5')}>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          ))}
-          <Button
-            type='button'
-            variant='outline'
-            size='sm'
-            className='mt-2'
-            onClick={() => append({ value: '' })}
-          >
-            Add URL
-          </Button>
-        </div>
-        <Button type='submit'>Update profile</Button>
+
+        {profile && (
+          <div className='rounded-lg border p-4'>
+            <h4 className='mb-2 text-sm font-medium'>Account Details</h4>
+            <dl className='grid grid-cols-2 gap-2 text-sm'>
+              <dt className='text-muted-foreground'>Role</dt>
+              <dd className='capitalize'>{profile.role}</dd>
+              <dt className='text-muted-foreground'>Organization</dt>
+              <dd>{profile.organization.name}</dd>
+              <dt className='text-muted-foreground'>Plan</dt>
+              <dd className='capitalize'>{profile.organization.plan}</dd>
+              <dt className='text-muted-foreground'>Timezone</dt>
+              <dd>{profile.organization.timezone}</dd>
+            </dl>
+          </div>
+        )}
+
+        <Button type='submit' disabled={updateMutation.isPending}>
+          {updateMutation.isPending ? 'Saving...' : 'Update Profile'}
+        </Button>
       </form>
     </Form>
   )

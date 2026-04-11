@@ -1,3 +1,18 @@
+import { useQuery } from '@tanstack/react-query'
+import {
+  AlertTriangle,
+  Building2,
+  CalendarCheck,
+  DollarSign,
+  Receipt,
+  Star,
+  Loader2,
+  Link2,
+  Wrench,
+} from 'lucide-react'
+import { Link } from '@tanstack/react-router'
+import { api } from '@/lib/api'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -6,165 +21,216 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
-import { TopNav } from '@/components/layout/top-nav'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Analytics } from './components/analytics'
+import { ActivityFeed } from './components/activity-feed'
 import { Overview } from './components/overview'
 import { RecentSales } from './components/recent-sales'
+import { useMaintenanceStats } from '@/features/maintenance/api'
+import { useExpenseSummary } from '@/features/expenses/api'
+
+interface DashboardResponse {
+  data: {
+    properties: number
+    listings: number
+    totalReservations: number
+    revenue: { currentMonth: number; lastMonth: number }
+    upcoming: { checkIns: number; checkOuts: number }
+    pendingProposals: number
+    recentActivity: unknown[]
+  }
+}
+
+function useDashboard() {
+  return useQuery({
+    queryKey: ['dashboard'],
+    queryFn: () => api.get<DashboardResponse>('/analytics/dashboard'),
+    select: (res) => res.data,
+  })
+}
 
 export function Dashboard() {
+  const { data, isLoading } = useDashboard()
+  const { data: maintenanceStats } = useMaintenanceStats()
+  const { data: expenseSummary } = useExpenseSummary(1)
+
   return (
     <>
-      {/* ===== Top Heading ===== */}
       <Header>
-        <TopNav links={topNav} />
+        <Search />
         <div className='ms-auto flex items-center space-x-4'>
-          <Search />
           <ThemeSwitch />
           <ConfigDrawer />
           <ProfileDropdown />
         </div>
       </Header>
 
-      {/* ===== Main ===== */}
       <Main>
         <div className='mb-2 flex items-center justify-between space-y-2'>
-          <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+          <div>
+            <h1 className='text-2xl font-bold tracking-tight'>Dashboard</h1>
+            <p className='text-muted-foreground'>
+              Your property management overview
+            </p>
+          </div>
           <div className='flex items-center space-x-2'>
-            <Button>Download</Button>
+            <Button variant='outline' asChild>
+              <Link to='/settings/connections'>
+                <Link2 className='mr-2 h-4 w-4' />
+                Connections
+              </Link>
+            </Button>
           </div>
         </div>
-        <Tabs
-          orientation='vertical'
-          defaultValue='overview'
-          className='space-y-4'
-        >
-          <div className='w-full overflow-x-auto pb-2'>
-            <TabsList>
-              <TabsTrigger value='overview'>Overview</TabsTrigger>
-              <TabsTrigger value='analytics'>Analytics</TabsTrigger>
-              <TabsTrigger value='reports' disabled>
-                Reports
-              </TabsTrigger>
-              <TabsTrigger value='notifications' disabled>
-                Notifications
-              </TabsTrigger>
-            </TabsList>
+
+        {isLoading ? (
+          <div className='flex items-center justify-center py-20'>
+            <Loader2 className='h-8 w-8 animate-spin text-muted-foreground' />
           </div>
-          <TabsContent value='overview' className='space-y-4'>
+        ) : (
+          <div className='space-y-4'>
             <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-4'>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Total Revenue
+                    Monthly Revenue
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' />
-                  </svg>
+                  <DollarSign className='h-4 w-4 text-muted-foreground' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>$45,231.89</div>
+                  <div className='text-2xl font-bold'>
+                    ${(data?.revenue.currentMonth ?? 0).toLocaleString()}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    +20.1% from last month
+                    {data?.revenue.lastMonth
+                      ? `${((((data.revenue.currentMonth - data.revenue.lastMonth) / data.revenue.lastMonth) * 100) || 0).toFixed(1)}% from last month`
+                      : 'No data last month'}
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Subscriptions
+                    Properties
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-                    <circle cx='9' cy='7' r='4' />
-                    <path d='M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' />
-                  </svg>
+                  <Building2 className='h-4 w-4 text-muted-foreground' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+2350</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.properties ?? 0}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    +180.1% from last month
-                  </p>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <CardTitle className='text-sm font-medium'>Sales</CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <rect width='20' height='14' x='2' y='5' rx='2' />
-                    <path d='M2 10h20' />
-                  </svg>
-                </CardHeader>
-                <CardContent>
-                  <div className='text-2xl font-bold'>+12,234</div>
-                  <p className='text-xs text-muted-foreground'>
-                    +19% from last month
+                    {data?.listings ?? 0} active listings
                   </p>
                 </CardContent>
               </Card>
               <Card>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
                   <CardTitle className='text-sm font-medium'>
-                    Active Now
+                    Reservations
                   </CardTitle>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth='2'
-                    className='h-4 w-4 text-muted-foreground'
-                  >
-                    <path d='M22 12h-4l-3 9L9 3l-3 9H2' />
-                  </svg>
+                  <CalendarCheck className='h-4 w-4 text-muted-foreground' />
                 </CardHeader>
                 <CardContent>
-                  <div className='text-2xl font-bold'>+573</div>
+                  <div className='text-2xl font-bold'>
+                    {data?.totalReservations ?? 0}
+                  </div>
                   <p className='text-xs text-muted-foreground'>
-                    +201 since last hour
+                    {data?.upcoming.checkIns ?? 0} check-ins this week
+                  </p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>
+                    Upcoming
+                  </CardTitle>
+                  <Star className='h-4 w-4 text-muted-foreground' />
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>
+                    {(data?.upcoming.checkIns ?? 0) + (data?.upcoming.checkOuts ?? 0)}
+                  </div>
+                  <p className='text-xs text-muted-foreground'>
+                    {data?.upcoming.checkOuts ?? 0} check-outs · {data?.pendingProposals ?? 0} pending proposals
                   </p>
                 </CardContent>
               </Card>
             </div>
+
+            {/* Quick Stats Row */}
+            <div className='grid gap-4 sm:grid-cols-3'>
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>Open Maintenance</CardTitle>
+                  <Wrench className='h-4 w-4 text-muted-foreground' />
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>
+                    {(maintenanceStats?.open ?? 0) + (maintenanceStats?.inProgress ?? 0)}
+                  </div>
+                  <div className='mt-1 flex items-center gap-2'>
+                    {(maintenanceStats?.urgent ?? 0) > 0 && (
+                      <Badge variant='destructive' className='text-xs'>
+                        <AlertTriangle className='mr-1 h-3 w-3' />
+                        {maintenanceStats?.urgent} urgent
+                      </Badge>
+                    )}
+                    <span className='text-xs text-muted-foreground'>
+                      {maintenanceStats?.inProgress ?? 0} in progress
+                    </span>
+                  </div>
+                  <Button variant='link' size='sm' className='mt-1 h-auto p-0' asChild>
+                    <Link to='/maintenance'>View all requests →</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>Monthly Expenses</CardTitle>
+                  <Receipt className='h-4 w-4 text-muted-foreground' />
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>
+                    ${(expenseSummary?.total ?? 0).toLocaleString()}
+                  </div>
+                  <p className='text-xs text-muted-foreground'>
+                    {expenseSummary?.byCategory.length ?? 0} categories
+                  </p>
+                  <Button variant='link' size='sm' className='mt-1 h-auto p-0' asChild>
+                    <Link to='/expenses'>Manage expenses →</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <CardTitle className='text-sm font-medium'>Pending Proposals</CardTitle>
+                  <Star className='h-4 w-4 text-muted-foreground' />
+                </CardHeader>
+                <CardContent>
+                  <div className='text-2xl font-bold'>
+                    {data?.pendingProposals ?? 0}
+                  </div>
+                  <p className='text-xs text-muted-foreground'>
+                    Pricing proposals awaiting action
+                  </p>
+                  <Button variant='link' size='sm' className='mt-1 h-auto p-0' asChild>
+                    <Link to='/pricing/proposals'>Review proposals →</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
             <div className='grid grid-cols-1 gap-4 lg:grid-cols-7'>
               <Card className='col-span-1 lg:col-span-4'>
                 <CardHeader>
-                  <CardTitle>Overview</CardTitle>
+                  <CardTitle>Revenue Overview</CardTitle>
                 </CardHeader>
                 <CardContent className='ps-2'>
                   <Overview />
@@ -172,9 +238,9 @@ export function Dashboard() {
               </Card>
               <Card className='col-span-1 lg:col-span-3'>
                 <CardHeader>
-                  <CardTitle>Recent Sales</CardTitle>
+                  <CardTitle>Recent Reservations</CardTitle>
                   <CardDescription>
-                    You made 265 sales this month.
+                    Latest booking activity
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -182,39 +248,20 @@ export function Dashboard() {
                 </CardContent>
               </Card>
             </div>
-          </TabsContent>
-          <TabsContent value='analytics' className='space-y-4'>
-            <Analytics />
-          </TabsContent>
-        </Tabs>
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  Latest events across your properties
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ActivityFeed />
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </Main>
     </>
   )
 }
-
-const topNav = [
-  {
-    title: 'Overview',
-    href: 'dashboard/overview',
-    isActive: true,
-    disabled: false,
-  },
-  {
-    title: 'Customers',
-    href: 'dashboard/customers',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Products',
-    href: 'dashboard/products',
-    isActive: false,
-    disabled: true,
-  },
-  {
-    title: 'Settings',
-    href: 'dashboard/settings',
-    isActive: false,
-    disabled: true,
-  },
-]

@@ -1,53 +1,30 @@
 import { create } from 'zustand'
-import { getCookie, setCookie, removeCookie } from '@/lib/cookies'
+import type { AuthUser } from '@/hooks/use-auth'
 
-const ACCESS_TOKEN = 'thisisjustarandomstring'
-
-interface AuthUser {
-  accountNo: string
-  email: string
-  role: string[]
-  exp: number
-}
+/**
+ * Lightweight Zustand store that mirrors the server session.
+ * The source of truth is the HTTP-only session cookie managed by
+ * the Hono backend.  React Query (useAuth) fetches the user and
+ * writes it here so that non-React code can read it synchronously.
+ */
 
 interface AuthState {
   auth: {
     user: AuthUser | null
     setUser: (user: AuthUser | null) => void
-    accessToken: string
-    setAccessToken: (accessToken: string) => void
-    resetAccessToken: () => void
     reset: () => void
   }
 }
 
-export const useAuthStore = create<AuthState>()((set) => {
-  const cookieState = getCookie(ACCESS_TOKEN)
-  const initToken = cookieState ? JSON.parse(cookieState) : ''
-  return {
-    auth: {
-      user: null,
-      setUser: (user) =>
-        set((state) => ({ ...state, auth: { ...state.auth, user } })),
-      accessToken: initToken,
-      setAccessToken: (accessToken) =>
-        set((state) => {
-          setCookie(ACCESS_TOKEN, JSON.stringify(accessToken))
-          return { ...state, auth: { ...state.auth, accessToken } }
-        }),
-      resetAccessToken: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return { ...state, auth: { ...state.auth, accessToken: '' } }
-        }),
-      reset: () =>
-        set((state) => {
-          removeCookie(ACCESS_TOKEN)
-          return {
-            ...state,
-            auth: { ...state.auth, user: null, accessToken: '' },
-          }
-        }),
-    },
-  }
-})
+export const useAuthStore = create<AuthState>()((set) => ({
+  auth: {
+    user: null,
+    setUser: (user) =>
+      set((state) => ({ ...state, auth: { ...state.auth, user } })),
+    reset: () =>
+      set((state) => ({
+        ...state,
+        auth: { ...state.auth, user: null },
+      })),
+  },
+}))

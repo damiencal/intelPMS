@@ -1,0 +1,30 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/docker-in-docker
+{
+	"name": "HostGrowth Dev",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
+
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"version": "latest",
+			"enableNonRootDocker": "false",
+			"moby": "false"
+		},
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "20"
+		}
+	},
+
+	// Forward ports for Vite dev server and API server
+	"forwardPorts": [5173, 3001, 3306],
+
+	// Install dependencies and start MySQL after container creation
+	"postCreateCommand": "npm install -g pnpm && pnpm install && docker compose up -d mysql && sleep 5 && pnpm db:push && pnpm db:seed"
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

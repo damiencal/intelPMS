@@ -4,11 +4,12 @@ import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { AlertTriangle } from 'lucide-react'
 import { toast } from 'sonner'
-import { sleep } from '@/lib/utils'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { ConfirmDialog } from '@/components/confirm-dialog'
+import { useBulkDeleteTasks } from '../api'
+import { type Task } from '../data/schema'
 
 type TaskMultiDeleteDialogProps<TData> = {
   open: boolean
@@ -24,6 +25,7 @@ export function TasksMultiDeleteDialog<TData>({
   table,
 }: TaskMultiDeleteDialogProps<TData>) {
   const [value, setValue] = useState('')
+  const bulkDelete = useBulkDeleteTasks()
 
   const selectedRows = table.getFilteredSelectedRowModel().rows
 
@@ -33,18 +35,15 @@ export function TasksMultiDeleteDialog<TData>({
       return
     }
 
-    onOpenChange(false)
-
-    toast.promise(sleep(2000), {
-      loading: 'Deleting tasks...',
-      success: () => {
+    const ids = selectedRows.map((row) => (row.original as Task).id)
+    bulkDelete.mutate(ids, {
+      onSuccess: (res) => {
+        onOpenChange(false)
         setValue('')
         table.resetRowSelection()
-        return `Deleted ${selectedRows.length} ${
-          selectedRows.length > 1 ? 'tasks' : 'task'
-        }`
+        toast.success(`Deleted ${res.deleted} task${res.deleted > 1 ? 's' : ''}`)
       },
-      error: 'Error',
+      onError: () => toast.error('Failed to delete tasks'),
     })
   }
 

@@ -32,15 +32,6 @@ export const tasksColumns: ColumnDef<Task>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: 'id',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Task' />
-    ),
-    cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'title',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Title' />
@@ -50,7 +41,7 @@ export const tasksColumns: ColumnDef<Task>[] = [
       tdClassName: 'ps-4',
     },
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
+      const label = labels.find((l) => l.value === row.original.label)
 
       return (
         <div className='flex space-x-2'>
@@ -68,12 +59,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
     meta: { className: 'ps-1', tdClassName: 'ps-4' },
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.getValue('status')
+        (s) => s.value === row.getValue('status')
       )
 
-      if (!status) {
-        return null
-      }
+      if (!status) return null
 
       return (
         <div className='flex w-[100px] items-center gap-2'>
@@ -96,12 +85,10 @@ export const tasksColumns: ColumnDef<Task>[] = [
     meta: { className: 'ps-1', tdClassName: 'ps-3' },
     cell: ({ row }) => {
       const priority = priorities.find(
-        (priority) => priority.value === row.getValue('priority')
+        (p) => p.value === row.getValue('priority')
       )
 
-      if (!priority) {
-        return null
-      }
+      if (!priority) return null
 
       return (
         <div className='flex items-center gap-2'>
@@ -114,6 +101,25 @@ export const tasksColumns: ColumnDef<Task>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: 'dueDate',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title='Due Date' />
+    ),
+    cell: ({ row }) => {
+      const dueDate = row.getValue('dueDate') as string | null
+      if (!dueDate) return <span className='text-muted-foreground'>—</span>
+      return (
+        <span className='whitespace-nowrap text-sm'>
+          {new Date(dueDate).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })}
+        </span>
+      )
     },
   },
   {

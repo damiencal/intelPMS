@@ -2,7 +2,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MailPlus, Send } from 'lucide-react'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -22,8 +22,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
+import { PasswordInput } from '@/components/password-input'
 import { SelectDropdown } from '@/components/select-dropdown'
+import { useCreateUser } from '../api'
 import { roles } from '../data/data'
 
 const formSchema = z.object({
@@ -31,8 +32,9 @@ const formSchema = z.object({
     error: (iss) =>
       iss.input === '' ? 'Please enter an email to invite.' : undefined,
   }),
+  name: z.string().min(1, 'Name is required.'),
   role: z.string().min(1, 'Role is required.'),
-  desc: z.string().optional(),
+  password: z.string().min(8, 'Password must be at least 8 characters.'),
 })
 
 type UserInviteForm = z.infer<typeof formSchema>
@@ -46,15 +48,21 @@ export function UsersInviteDialog({
   open,
   onOpenChange,
 }: UserInviteDialogProps) {
+  const createUser = useCreateUser()
   const form = useForm<UserInviteForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: { email: '', role: '', desc: '' },
+    defaultValues: { email: '', name: '', role: '', password: '' },
   })
 
   const onSubmit = (values: UserInviteForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
+    createUser.mutate(values, {
+      onSuccess: () => {
+        toast.success(`User ${values.name} invited successfully`)
+        form.reset()
+        onOpenChange(false)
+      },
+      onError: (err) => toast.error(err.message),
+    })
   }
 
   return (
@@ -71,8 +79,8 @@ export function UsersInviteDialog({
             <MailPlus /> Invite User
           </DialogTitle>
           <DialogDescription>
-            Invite new user to join your team by sending them an email
-            invitation. Assign a role to define their access level.
+            Invite a new team member by creating their account.
+            Assign a role to define their access level.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -81,6 +89,22 @@ export function UsersInviteDialog({
             onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-4'
           >
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='eg: John Doe'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name='email'
@@ -119,14 +143,13 @@ export function UsersInviteDialog({
             />
             <FormField
               control={form.control}
-              name='desc'
+              name='password'
               render={({ field }) => (
-                <FormItem className=''>
-                  <FormLabel>Description (optional)</FormLabel>
+                <FormItem>
+                  <FormLabel>Initial Password</FormLabel>
                   <FormControl>
-                    <Textarea
-                      className='resize-none'
-                      placeholder='Add a personal note to your invitation (optional)'
+                    <PasswordInput
+                      placeholder='e.g., S3cur3P@ssw0rd'
                       {...field}
                     />
                   </FormControl>
@@ -140,8 +163,8 @@ export function UsersInviteDialog({
           <DialogClose asChild>
             <Button variant='outline'>Cancel</Button>
           </DialogClose>
-          <Button type='submit' form='user-invite-form'>
-            Invite <Send />
+          <Button type='submit' form='user-invite-form' disabled={createUser.isPending}>
+            {createUser.isPending ? 'Creating...' : 'Invite'} <Send />
           </Button>
         </DialogFooter>
       </DialogContent>
