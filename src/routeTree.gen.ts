@@ -31,6 +31,7 @@ import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedTeamShiftsIndexRouteImport } from './routes/_authenticated/team-shifts/index'
 import { Route as AuthenticatedTaxReportsIndexRouteImport } from './routes/_authenticated/tax-reports/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
+import { Route as AuthenticatedStaffPayrollIndexRouteImport } from './routes/_authenticated/staff-payroll/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSecurityDepositsIndexRouteImport } from './routes/_authenticated/security-deposits/index'
 import { Route as AuthenticatedReviewsIndexRouteImport } from './routes/_authenticated/reviews/index'
@@ -40,6 +41,8 @@ import { Route as AuthenticatedReportsIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedRateParityIndexRouteImport } from './routes/_authenticated/rate-parity/index'
 import { Route as AuthenticatedPropertyComparisonIndexRouteImport } from './routes/_authenticated/property-comparison/index'
 import { Route as AuthenticatedPropertiesIndexRouteImport } from './routes/_authenticated/properties/index'
+import { Route as AuthenticatedPricingRecommendationsIndexRouteImport } from './routes/_authenticated/pricing-recommendations/index'
+import { Route as AuthenticatedPortfolioIndexRouteImport } from './routes/_authenticated/portfolio/index'
 import { Route as AuthenticatedOwnerStatementsIndexRouteImport } from './routes/_authenticated/owner-statements/index'
 import { Route as AuthenticatedNotificationsIndexRouteImport } from './routes/_authenticated/notifications/index'
 import { Route as AuthenticatedMessagingIndexRouteImport } from './routes/_authenticated/messaging/index'
@@ -56,6 +59,7 @@ import { Route as AuthenticatedDocumentsIndexRouteImport } from './routes/_authe
 import { Route as AuthenticatedCompetitorRatesIndexRouteImport } from './routes/_authenticated/competitor-rates/index'
 import { Route as AuthenticatedCleaningIndexRouteImport } from './routes/_authenticated/cleaning/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
+import { Route as AuthenticatedChannelSyncIndexRouteImport } from './routes/_authenticated/channel-sync/index'
 import { Route as AuthenticatedAutoMessagesIndexRouteImport } from './routes/_authenticated/auto-messages/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
 import { Route as AuthenticatedAnalyticsIndexRouteImport } from './routes/_authenticated/analytics/index'
@@ -185,6 +189,12 @@ const AuthenticatedTasksIndexRoute = AuthenticatedTasksIndexRouteImport.update({
   path: '/tasks/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedStaffPayrollIndexRoute =
+  AuthenticatedStaffPayrollIndexRouteImport.update({
+    id: '/staff-payroll/',
+    path: '/staff-payroll/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSettingsIndexRoute =
   AuthenticatedSettingsIndexRouteImport.update({
     id: '/',
@@ -237,6 +247,18 @@ const AuthenticatedPropertiesIndexRoute =
   AuthenticatedPropertiesIndexRouteImport.update({
     id: '/properties/',
     path: '/properties/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPricingRecommendationsIndexRoute =
+  AuthenticatedPricingRecommendationsIndexRouteImport.update({
+    id: '/pricing-recommendations/',
+    path: '/pricing-recommendations/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPortfolioIndexRoute =
+  AuthenticatedPortfolioIndexRouteImport.update({
+    id: '/portfolio/',
+    path: '/portfolio/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedOwnerStatementsIndexRoute =
@@ -334,6 +356,12 @@ const AuthenticatedChatsIndexRoute = AuthenticatedChatsIndexRouteImport.update({
   path: '/chats/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedChannelSyncIndexRoute =
+  AuthenticatedChannelSyncIndexRouteImport.update({
+    id: '/channel-sync/',
+    path: '/channel-sync/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAutoMessagesIndexRoute =
   AuthenticatedAutoMessagesIndexRouteImport.update({
     id: '/auto-messages/',
@@ -458,6 +486,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof AuthenticatedAnalyticsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/auto-messages': typeof AuthenticatedAutoMessagesIndexRoute
+  '/channel-sync': typeof AuthenticatedChannelSyncIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/cleaning': typeof AuthenticatedCleaningIndexRoute
   '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
@@ -474,6 +503,8 @@ export interface FileRoutesByFullPath {
   '/messaging': typeof AuthenticatedMessagingIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/owner-statements': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/portfolio': typeof AuthenticatedPortfolioIndexRoute
+  '/pricing-recommendations': typeof AuthenticatedPricingRecommendationsIndexRoute
   '/properties': typeof AuthenticatedPropertiesIndexRoute
   '/property-comparison': typeof AuthenticatedPropertyComparisonIndexRoute
   '/rate-parity': typeof AuthenticatedRateParityIndexRoute
@@ -483,6 +514,7 @@ export interface FileRoutesByFullPath {
   '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/security-deposits': typeof AuthenticatedSecurityDepositsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/staff-payroll': typeof AuthenticatedStaffPayrollIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/tax-reports': typeof AuthenticatedTaxReportsIndexRoute
   '/team-shifts': typeof AuthenticatedTeamShiftsIndexRoute
@@ -519,6 +551,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof AuthenticatedAnalyticsIndexRoute
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/auto-messages': typeof AuthenticatedAutoMessagesIndexRoute
+  '/channel-sync': typeof AuthenticatedChannelSyncIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/cleaning': typeof AuthenticatedCleaningIndexRoute
   '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
@@ -535,6 +568,8 @@ export interface FileRoutesByTo {
   '/messaging': typeof AuthenticatedMessagingIndexRoute
   '/notifications': typeof AuthenticatedNotificationsIndexRoute
   '/owner-statements': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/portfolio': typeof AuthenticatedPortfolioIndexRoute
+  '/pricing-recommendations': typeof AuthenticatedPricingRecommendationsIndexRoute
   '/properties': typeof AuthenticatedPropertiesIndexRoute
   '/property-comparison': typeof AuthenticatedPropertyComparisonIndexRoute
   '/rate-parity': typeof AuthenticatedRateParityIndexRoute
@@ -544,6 +579,7 @@ export interface FileRoutesByTo {
   '/reviews': typeof AuthenticatedReviewsIndexRoute
   '/security-deposits': typeof AuthenticatedSecurityDepositsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
+  '/staff-payroll': typeof AuthenticatedStaffPayrollIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/tax-reports': typeof AuthenticatedTaxReportsIndexRoute
   '/team-shifts': typeof AuthenticatedTeamShiftsIndexRoute
@@ -585,6 +621,7 @@ export interface FileRoutesById {
   '/_authenticated/analytics/': typeof AuthenticatedAnalyticsIndexRoute
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/auto-messages/': typeof AuthenticatedAutoMessagesIndexRoute
+  '/_authenticated/channel-sync/': typeof AuthenticatedChannelSyncIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/cleaning/': typeof AuthenticatedCleaningIndexRoute
   '/_authenticated/competitor-rates/': typeof AuthenticatedCompetitorRatesIndexRoute
@@ -601,6 +638,8 @@ export interface FileRoutesById {
   '/_authenticated/messaging/': typeof AuthenticatedMessagingIndexRoute
   '/_authenticated/notifications/': typeof AuthenticatedNotificationsIndexRoute
   '/_authenticated/owner-statements/': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/_authenticated/portfolio/': typeof AuthenticatedPortfolioIndexRoute
+  '/_authenticated/pricing-recommendations/': typeof AuthenticatedPricingRecommendationsIndexRoute
   '/_authenticated/properties/': typeof AuthenticatedPropertiesIndexRoute
   '/_authenticated/property-comparison/': typeof AuthenticatedPropertyComparisonIndexRoute
   '/_authenticated/rate-parity/': typeof AuthenticatedRateParityIndexRoute
@@ -610,6 +649,7 @@ export interface FileRoutesById {
   '/_authenticated/reviews/': typeof AuthenticatedReviewsIndexRoute
   '/_authenticated/security-deposits/': typeof AuthenticatedSecurityDepositsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
+  '/_authenticated/staff-payroll/': typeof AuthenticatedStaffPayrollIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/tax-reports/': typeof AuthenticatedTaxReportsIndexRoute
   '/_authenticated/team-shifts/': typeof AuthenticatedTeamShiftsIndexRoute
@@ -649,6 +689,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/apps'
     | '/auto-messages'
+    | '/channel-sync'
     | '/chats'
     | '/cleaning'
     | '/competitor-rates'
@@ -665,6 +706,8 @@ export interface FileRouteTypes {
     | '/messaging'
     | '/notifications'
     | '/owner-statements'
+    | '/portfolio'
+    | '/pricing-recommendations'
     | '/properties'
     | '/property-comparison'
     | '/rate-parity'
@@ -674,6 +717,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/security-deposits'
     | '/settings/'
+    | '/staff-payroll'
     | '/tasks'
     | '/tax-reports'
     | '/team-shifts'
@@ -710,6 +754,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/apps'
     | '/auto-messages'
+    | '/channel-sync'
     | '/chats'
     | '/cleaning'
     | '/competitor-rates'
@@ -726,6 +771,8 @@ export interface FileRouteTypes {
     | '/messaging'
     | '/notifications'
     | '/owner-statements'
+    | '/portfolio'
+    | '/pricing-recommendations'
     | '/properties'
     | '/property-comparison'
     | '/rate-parity'
@@ -735,6 +782,7 @@ export interface FileRouteTypes {
     | '/reviews'
     | '/security-deposits'
     | '/settings'
+    | '/staff-payroll'
     | '/tasks'
     | '/tax-reports'
     | '/team-shifts'
@@ -775,6 +823,7 @@ export interface FileRouteTypes {
     | '/_authenticated/analytics/'
     | '/_authenticated/apps/'
     | '/_authenticated/auto-messages/'
+    | '/_authenticated/channel-sync/'
     | '/_authenticated/chats/'
     | '/_authenticated/cleaning/'
     | '/_authenticated/competitor-rates/'
@@ -791,6 +840,8 @@ export interface FileRouteTypes {
     | '/_authenticated/messaging/'
     | '/_authenticated/notifications/'
     | '/_authenticated/owner-statements/'
+    | '/_authenticated/portfolio/'
+    | '/_authenticated/pricing-recommendations/'
     | '/_authenticated/properties/'
     | '/_authenticated/property-comparison/'
     | '/_authenticated/rate-parity/'
@@ -800,6 +851,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reviews/'
     | '/_authenticated/security-deposits/'
     | '/_authenticated/settings/'
+    | '/_authenticated/staff-payroll/'
     | '/_authenticated/tasks/'
     | '/_authenticated/tax-reports/'
     | '/_authenticated/team-shifts/'
@@ -979,6 +1031,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/staff-payroll/': {
+      id: '/_authenticated/staff-payroll/'
+      path: '/staff-payroll'
+      fullPath: '/staff-payroll'
+      preLoaderRoute: typeof AuthenticatedStaffPayrollIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/settings/': {
       id: '/_authenticated/settings/'
       path: '/'
@@ -1040,6 +1099,20 @@ declare module '@tanstack/react-router' {
       path: '/properties'
       fullPath: '/properties'
       preLoaderRoute: typeof AuthenticatedPropertiesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pricing-recommendations/': {
+      id: '/_authenticated/pricing-recommendations/'
+      path: '/pricing-recommendations'
+      fullPath: '/pricing-recommendations'
+      preLoaderRoute: typeof AuthenticatedPricingRecommendationsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/portfolio/': {
+      id: '/_authenticated/portfolio/'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof AuthenticatedPortfolioIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/owner-statements/': {
@@ -1152,6 +1225,13 @@ declare module '@tanstack/react-router' {
       path: '/chats'
       fullPath: '/chats'
       preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/channel-sync/': {
+      id: '/_authenticated/channel-sync/'
+      path: '/channel-sync'
+      fullPath: '/channel-sync'
+      preLoaderRoute: typeof AuthenticatedChannelSyncIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/auto-messages/': {
@@ -1306,6 +1386,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAnalyticsIndexRoute: typeof AuthenticatedAnalyticsIndexRoute
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedAutoMessagesIndexRoute: typeof AuthenticatedAutoMessagesIndexRoute
+  AuthenticatedChannelSyncIndexRoute: typeof AuthenticatedChannelSyncIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedCleaningIndexRoute: typeof AuthenticatedCleaningIndexRoute
   AuthenticatedCompetitorRatesIndexRoute: typeof AuthenticatedCompetitorRatesIndexRoute
@@ -1322,6 +1403,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedMessagingIndexRoute: typeof AuthenticatedMessagingIndexRoute
   AuthenticatedNotificationsIndexRoute: typeof AuthenticatedNotificationsIndexRoute
   AuthenticatedOwnerStatementsIndexRoute: typeof AuthenticatedOwnerStatementsIndexRoute
+  AuthenticatedPortfolioIndexRoute: typeof AuthenticatedPortfolioIndexRoute
+  AuthenticatedPricingRecommendationsIndexRoute: typeof AuthenticatedPricingRecommendationsIndexRoute
   AuthenticatedPropertiesIndexRoute: typeof AuthenticatedPropertiesIndexRoute
   AuthenticatedPropertyComparisonIndexRoute: typeof AuthenticatedPropertyComparisonIndexRoute
   AuthenticatedRateParityIndexRoute: typeof AuthenticatedRateParityIndexRoute
@@ -1330,6 +1413,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedRevenueForecastIndexRoute: typeof AuthenticatedRevenueForecastIndexRoute
   AuthenticatedReviewsIndexRoute: typeof AuthenticatedReviewsIndexRoute
   AuthenticatedSecurityDepositsIndexRoute: typeof AuthenticatedSecurityDepositsIndexRoute
+  AuthenticatedStaffPayrollIndexRoute: typeof AuthenticatedStaffPayrollIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedTaxReportsIndexRoute: typeof AuthenticatedTaxReportsIndexRoute
   AuthenticatedTeamShiftsIndexRoute: typeof AuthenticatedTeamShiftsIndexRoute
@@ -1350,6 +1434,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAnalyticsIndexRoute: AuthenticatedAnalyticsIndexRoute,
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedAutoMessagesIndexRoute: AuthenticatedAutoMessagesIndexRoute,
+  AuthenticatedChannelSyncIndexRoute: AuthenticatedChannelSyncIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedCleaningIndexRoute: AuthenticatedCleaningIndexRoute,
   AuthenticatedCompetitorRatesIndexRoute:
@@ -1368,6 +1453,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotificationsIndexRoute: AuthenticatedNotificationsIndexRoute,
   AuthenticatedOwnerStatementsIndexRoute:
     AuthenticatedOwnerStatementsIndexRoute,
+  AuthenticatedPortfolioIndexRoute: AuthenticatedPortfolioIndexRoute,
+  AuthenticatedPricingRecommendationsIndexRoute:
+    AuthenticatedPricingRecommendationsIndexRoute,
   AuthenticatedPropertiesIndexRoute: AuthenticatedPropertiesIndexRoute,
   AuthenticatedPropertyComparisonIndexRoute:
     AuthenticatedPropertyComparisonIndexRoute,
@@ -1379,6 +1467,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReviewsIndexRoute: AuthenticatedReviewsIndexRoute,
   AuthenticatedSecurityDepositsIndexRoute:
     AuthenticatedSecurityDepositsIndexRoute,
+  AuthenticatedStaffPayrollIndexRoute: AuthenticatedStaffPayrollIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedTaxReportsIndexRoute: AuthenticatedTaxReportsIndexRoute,
   AuthenticatedTeamShiftsIndexRoute: AuthenticatedTeamShiftsIndexRoute,

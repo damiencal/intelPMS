@@ -53,16 +53,14 @@ export function usePricingRecs(
 
   return useQuery({
     queryKey: keys.list(params),
-    queryFn: () =>
-      api.get(`/api/pricing-recommendations?${sp.toString()}`).then((r) => r.json()),
+    queryFn: () => api.get(`/pricing-recommendations?${sp.toString()}`),
   })
 }
 
 export function usePricingRecsStats() {
   return useQuery({
     queryKey: keys.stats(),
-    queryFn: () =>
-      api.get('/api/pricing-recommendations/stats').then((r) => r.json()),
+    queryFn: () => api.get('/pricing-recommendations/stats'),
   })
 }
 
@@ -70,7 +68,7 @@ export function useGenerateRecs() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (data: { propertyId: string }) =>
-      api.post('/api/pricing-recommendations/generate', { json: data }).then((r) => r.json()),
+      api.post('/pricing-recommendations/generate', data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: keys.all })
     },
@@ -80,8 +78,7 @@ export function useGenerateRecs() {
 export function useAcceptRec() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) =>
-      api.put(`/api/pricing-recommendations/${id}/accept`).then((r) => r.json()),
+    mutationFn: (id: string) => api.put(`/pricing-recommendations/${id}/accept`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: keys.all })
     },
@@ -91,8 +88,7 @@ export function useAcceptRec() {
 export function useRejectRec() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) =>
-      api.put(`/api/pricing-recommendations/${id}/reject`).then((r) => r.json()),
+    mutationFn: (id: string) => api.put(`/pricing-recommendations/${id}/reject`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: keys.all })
     },
@@ -102,8 +98,7 @@ export function useRejectRec() {
 export function useDeleteRec() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) =>
-      api.delete(`/api/pricing-recommendations/${id}`).then((r) => r.json()),
+    mutationFn: (id: string) => api.delete(`/pricing-recommendations/${id}`),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: keys.all })
     },

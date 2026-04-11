@@ -51,8 +51,7 @@ const keys = {
 export function usePortfolio() {
   return useQuery({
     queryKey: keys.all,
-    queryFn: () =>
-      api.get('/api/portfolio').then((r) => r.json()),
+    queryFn: () => api.get('/portfolio'),
     select: (res: { data: PortfolioData }) => res.data,
   })
 }

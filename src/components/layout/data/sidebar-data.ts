@@ -233,6 +233,26 @@ export const sidebarData: SidebarData = {
           url: '/utilities',
           icon: Plug,
         },
+        {
+          title: 'Dynamic Pricing',
+          url: '/pricing-recommendations',
+          icon: DollarSign,
+        },
+        {
+          title: 'Portfolio',
+          url: '/portfolio',
+          icon: BarChart3,
+        },
+        {
+          title: 'Staff Payroll',
+          url: '/staff-payroll',
+          icon: Receipt,
+        },
+        {
+          title: 'Channel Sync',
+          url: '/channel-sync',
+          icon: Link2,
+        },
       ],
     },
     {
