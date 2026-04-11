@@ -8,7 +8,12 @@ import {
   TrendingUp,
   Receipt,
   RefreshCw,
+  BadgeDollarSign,
+  ShieldCheck,
+  ShieldHalf,
+  Plug,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -147,9 +152,33 @@ export function Expenses() {
               Track and manage property-related expenses.
             </p>
           </div>
-          <Button onClick={handleAdd}>
-            <Plus className='mr-2 h-4 w-4' /> Add Expense
-          </Button>
+          <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-1'>
+              <Link to='/staff-payroll'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Staff Payroll'>
+                  <BadgeDollarSign size={16} />
+                </Button>
+              </Link>
+              <Link to='/security-deposits'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Security Deposits'>
+                  <ShieldCheck size={16} />
+                </Button>
+              </Link>
+              <Link to='/insurance'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Insurance'>
+                  <ShieldHalf size={16} />
+                </Button>
+              </Link>
+              <Link to='/utilities'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Utilities'>
+                  <Plug size={16} />
+                </Button>
+              </Link>
+            </div>
+            <Button onClick={handleAdd}>
+              <Plus className='mr-2 h-4 w-4' /> Add Expense
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}

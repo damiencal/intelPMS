@@ -4,10 +4,12 @@ import {
   Building2,
   CalendarDays,
   DollarSign,
+  FileSpreadsheet,
   Loader2,
   Moon,
   TrendingUp,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import {
   Bar,
   BarChart,
@@ -105,20 +107,27 @@ export function Reports() {
               Revenue, occupancy, and channel performance
             </p>
           </div>
-          <Select
-            value={String(months)}
-            onValueChange={(v) => setMonths(Number(v))}
-          >
-            <SelectTrigger className='w-[140px]'>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value='3'>Last 3 months</SelectItem>
-              <SelectItem value='6'>Last 6 months</SelectItem>
-              <SelectItem value='12'>Last 12 months</SelectItem>
-              <SelectItem value='24'>Last 24 months</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className='flex items-center gap-2'>
+            <Link to='/tax-reports'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Tax Reports'>
+                <FileSpreadsheet size={16} />
+              </Button>
+            </Link>
+            <Select
+              value={String(months)}
+              onValueChange={(v) => setMonths(Number(v))}
+            >
+              <SelectTrigger className='w-[140px]'>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value='3'>Last 3 months</SelectItem>
+                <SelectItem value='6'>Last 6 months</SelectItem>
+                <SelectItem value='12'>Last 12 months</SelectItem>
+                <SelectItem value='24'>Last 24 months</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {isLoading ? (

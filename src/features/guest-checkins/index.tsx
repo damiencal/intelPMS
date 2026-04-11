@@ -5,6 +5,7 @@ import {
   DoorOpen,
   Eye,
   Key,
+  KeyRound,
   Loader2,
   MoreHorizontal,
   Pencil,
@@ -12,6 +13,7 @@ import {
   Trash2,
   Wifi,
 } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -97,9 +99,16 @@ export function GuestCheckins() {
               Manage check-in instructions, access codes, and guest guides.
             </p>
           </div>
-          <Button onClick={() => { setEditing(null); setDialogOpen(true) }}>
-            <Plus className='mr-2 h-4 w-4' /> New Check-in
-          </Button>
+          <div className='flex items-center gap-2'>
+            <Link to='/key-handovers'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Key Management'>
+                <KeyRound size={16} />
+              </Button>
+            </Link>
+            <Button onClick={() => { setEditing(null); setDialogOpen(true) }}>
+              <Plus className='mr-2 h-4 w-4' /> New Check-in
+            </Button>
+          </div>
         </div>
 
         {isLoading ? (

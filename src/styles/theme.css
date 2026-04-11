@@ -68,6 +68,15 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+
+  --shadow-soft:        0 2px 8px  rgba(0,0,0,0.04);
+  --shadow-soft-md:     0 4px 16px rgba(0,0,0,0.06);
+  --shadow-soft-lg:     0 8px 24px rgba(0,0,0,0.08);
+  --shadow-glass:       0 8px 32px rgba(0,0,0,0.06);
+  --shadow-glass-lg:    0 12px 48px rgba(0,0,0,0.08);
+  --shadow-float:       0 20px 60px rgba(0,0,0,0.10);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);

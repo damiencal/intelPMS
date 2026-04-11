@@ -10,6 +10,8 @@ import {
   MessagesSquare,
   Loader2,
   Building2,
+  BotMessageSquare,
+  MailPlus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { api } from '@/lib/api'
@@ -154,6 +156,18 @@ export function Chats() {
                 <div className='flex gap-2'>
                   <h1 className='text-2xl font-bold'>Messages</h1>
                   <MessagesSquare size={20} />
+                </div>
+                <div className='flex items-center gap-1'>
+                  <Link to='/messaging'>
+                    <Button variant='ghost' size='icon' className='h-8 w-8' title='Message Templates'>
+                      <MailPlus size={16} />
+                    </Button>
+                  </Link>
+                  <Link to='/auto-messages'>
+                    <Button variant='ghost' size='icon' className='h-8 w-8' title='Auto Messages'>
+                      <BotMessageSquare size={16} />
+                    </Button>
+                  </Link>
                 </div>
               </div>
 

@@ -5,6 +5,8 @@ import {
   TrendingUp,
   Building2,
   CalendarDays,
+  Briefcase,
+  GitCompareArrows,
 } from 'lucide-react'
 import {
   Bar,
@@ -83,13 +85,32 @@ export function Analytics() {
       </Header>
 
       <Main>
-        <div className='mb-4'>
-          <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            Analytics
-          </h1>
-          <p className='text-muted-foreground'>
-            Revenue, occupancy, and performance analytics.
-          </p>
+        <div className='mb-4 flex flex-wrap items-start justify-between gap-2'>
+          <div>
+            <h1 className='text-2xl font-bold tracking-tight md:text-3xl'>
+              Analytics
+            </h1>
+            <p className='text-muted-foreground'>
+              Revenue, occupancy, and performance analytics.
+            </p>
+          </div>
+          <div className='flex items-center gap-1'>
+            <Link to='/revenue-forecast'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Revenue Forecast'>
+                <TrendingUp size={16} />
+              </Button>
+            </Link>
+            <Link to='/portfolio'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Portfolio'>
+                <Briefcase size={16} />
+              </Button>
+            </Link>
+            <Link to='/property-comparison'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Property Compare'>
+                <GitCompareArrows size={16} />
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {isLoading ? (

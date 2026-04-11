@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import {
+  ChevronLeft,
+  ChevronRight,
   DollarSign,
   Loader2,
   MoreHorizontal,
@@ -10,14 +12,6 @@ import {
   Users,
 } from 'lucide-react'
 import { toast } from 'sonner'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,14 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 import { ConfirmDialog } from '@/components/confirm-dialog'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -58,6 +44,42 @@ import {
   useUpdateStaffPayroll,
 } from './api'
 import { PayrollDialog } from './components/payroll-dialog'
+
+const STATUS_CONFIG: Record<string, { label: string; className: string; dot: string }> = {
+  pending: {
+    label: 'Pending',
+    className: 'px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-500/[0.08] text-amber-700',
+    dot: 'bg-amber-500',
+  },
+  approved: {
+    label: 'Approved',
+    className: 'px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-500/[0.08] text-blue-700',
+    dot: 'bg-blue-500',
+  },
+  paid: {
+    label: 'Paid',
+    className: 'px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/[0.08] text-emerald-700',
+    dot: 'bg-emerald-500',
+  },
+  cancelled: {
+    label: 'Cancelled',
+    className: 'px-2 py-0.5 rounded-full text-xs font-semibold bg-red-500/[0.08] text-red-600',
+    dot: 'bg-red-500',
+  },
+}
+
+function StatusBadge({ status }: { status: string }) {
+  const cfg = STATUS_CONFIG[status] ?? {
+    label: status,
+    className: 'px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-500',
+    dot: 'bg-gray-400',
+  }
+  return (
+    <span className={cfg.className}>
+      {cfg.label}
+    </span>
+  )
+}
 
 export default function StaffPayrollPage() {
   const [page, setPage] = useState(1)
@@ -115,23 +137,8 @@ export default function StaffPayrollPage() {
     })
   }
 
-  const formatCurrency = (v: number) =>
+  const fmt = (v: number) =>
     new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v)
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Badge className='bg-yellow-500 text-white'>Pending</Badge>
-      case 'approved':
-        return <Badge className='bg-blue-600 text-white'>Approved</Badge>
-      case 'paid':
-        return <Badge className='bg-green-600 text-white'>Paid</Badge>
-      case 'cancelled':
-        return <Badge variant='destructive'>Cancelled</Badge>
-      default:
-        return <Badge variant='outline'>{status}</Badge>
-    }
-  }
 
   return (
     <>
@@ -144,183 +151,206 @@ export default function StaffPayrollPage() {
       </Header>
 
       <Main>
-        <div className='mb-4 flex items-center justify-between'>
+        {/* Page header */}
+        <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
           <div>
-            <h2 className='text-2xl font-bold tracking-tight'>Staff Payroll</h2>
-            <p className='text-muted-foreground'>
+            <h2 className='text-2xl font-semibold tracking-tight text-gray-900'>Staff Payroll</h2>
+            <p className='text-sm text-gray-500 mt-0.5'>
               Track payroll, deductions, and payment status across your team.
             </p>
           </div>
-          <Button onClick={() => setDialogOpen(true)}>
-            <Plus className='mr-2 h-4 w-4' /> Add Entry
-          </Button>
+          <div className='flex items-center gap-2 flex-wrap'>
+            <button
+              onClick={() => setDialogOpen(true)}
+              className='px-4 py-2 bg-gray-900 hover:bg-gray-900/90 text-white text-sm font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
+            >
+              <Plus className='h-4 w-4' />
+              Add Entry
+            </button>
+          </div>
         </div>
 
-        {stats && (
-          <div className='mb-6 grid gap-4 md:grid-cols-4'>
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium'>Team Members</CardTitle>
-                <Users className='text-muted-foreground h-4 w-4' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold'>{stats.uniqueStaff}</div>
-                <p className='text-muted-foreground text-xs'>{stats.total} payroll entries</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium'>Gross</CardTitle>
-                <Receipt className='text-blue-500 h-4 w-4' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold'>{formatCurrency(stats.totalGross)}</div>
-                <p className='text-muted-foreground text-xs'>Deductions {formatCurrency(stats.totalDeductions)}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium'>Net Payroll</CardTitle>
-                <DollarSign className='text-green-500 h-4 w-4' />
-              </CardHeader>
-              <CardContent>
-                <div className='text-2xl font-bold'>{formatCurrency(stats.totalNet)}</div>
-                <p className='text-muted-foreground text-xs'>Hours logged: {stats.totalHours}</p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className='flex flex-row items-center justify-between pb-2'>
-                <CardTitle className='text-sm font-medium'>Status Mix</CardTitle>
-                <Badge variant='outline' className='h-5'>
+        {/* Stat cards */}
+        {stats ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-6'>
+            {/* Team Members */}
+            <div className='glass-card rounded-2xl p-5'>
+              <div className='flex items-center justify-between mb-4'>
+                <span className='text-sm text-gray-500'>Team Members</span>
+                <div className='p-2 bg-purple-50 rounded-lg'>
+                  <Users className='w-4 h-4 text-purple-500' />
+                </div>
+              </div>
+              <div className='text-2xl font-bold text-gray-900 tracking-tight'>{stats.uniqueStaff}</div>
+              <div className='text-xs text-gray-400 mt-1'>{stats.total} payroll entries</div>
+            </div>
+
+            {/* Gross */}
+            <div className='glass-card rounded-2xl p-5'>
+              <div className='flex items-center justify-between mb-4'>
+                <span className='text-sm text-gray-500'>Gross</span>
+                <div className='p-2 bg-blue-50 rounded-lg'>
+                  <Receipt className='w-4 h-4 text-blue-500' />
+                </div>
+              </div>
+              <div className='text-2xl font-bold text-gray-900 tracking-tight'>{fmt(stats.totalGross)}</div>
+              <div className='text-xs text-gray-400 mt-1'>Deductions {fmt(stats.totalDeductions)}</div>
+            </div>
+
+            {/* Net Payroll */}
+            <div className='glass-card rounded-2xl p-5'>
+              <div className='flex items-center justify-between mb-4'>
+                <span className='text-sm text-gray-500'>Net Payroll</span>
+                <div className='p-2 bg-emerald-50 rounded-lg'>
+                  <DollarSign className='w-4 h-4 text-emerald-500' />
+                </div>
+              </div>
+              <div className='text-2xl font-bold text-gray-900 tracking-tight'>{fmt(stats.totalNet)}</div>
+              <div className='text-xs text-gray-400 mt-1'>Hours logged: {stats.totalHours}</div>
+            </div>
+
+            {/* Status Mix */}
+            <div className='glass-card rounded-2xl p-5'>
+              <div className='flex items-center justify-between mb-4'>
+                <span className='text-sm text-gray-500'>Status Mix</span>
+                <span className='px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/[0.08] text-emerald-700'>
                   Live
-                </Badge>
-              </CardHeader>
-              <CardContent>
-                <div className='text-sm'>Pending: {stats.pending}</div>
-                <div className='text-sm'>Approved: {stats.approved}</div>
-                <div className='text-sm'>Paid: {stats.paid}</div>
-              </CardContent>
-            </Card>
+                </span>
+              </div>
+              <div className='space-y-1.5'>
+                <div className='flex items-center justify-between text-sm'>
+                  <span className='text-gray-500'>Pending</span>
+                  <span className='font-semibold text-gray-900'>{stats.pending}</span>
+                </div>
+                <div className='flex items-center justify-between text-sm'>
+                  <span className='text-gray-500'>Approved</span>
+                  <span className='font-semibold text-gray-900'>{stats.approved}</span>
+                </div>
+                <div className='flex items-center justify-between text-sm'>
+                  <span className='text-gray-500'>Paid</span>
+                  <span className='font-semibold text-gray-900'>{stats.paid}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-6'>
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className='glass-card rounded-2xl p-5 animate-pulse h-32' />
+            ))}
           </div>
         )}
 
-        <div className='mb-4 flex flex-wrap gap-3'>
+        {/* Filters */}
+        <div className='flex flex-wrap gap-3 mb-5'>
           <Select
             value={roleFilter}
-            onValueChange={(v) => {
-              setRoleFilter(v === 'all' ? '' : v)
-              setPage(1)
-            }}
+            onValueChange={(v) => { setRoleFilter(v === 'all' ? '' : v); setPage(1) }}
           >
-            <SelectTrigger className='w-44'>
+            <SelectTrigger className='w-44 border-black/[0.08] rounded-xl text-sm focus:ring-2 focus:ring-black/[0.15]'>
               <SelectValue placeholder='All Roles' />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>All Roles</SelectItem>
               {PAYROLL_ROLES.map((r) => (
-                <SelectItem key={r.value} value={r.value}>
-                  {r.label}
-                </SelectItem>
+                <SelectItem key={r.value} value={r.value}>{r.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select
             value={payTypeFilter}
-            onValueChange={(v) => {
-              setPayTypeFilter(v === 'all' ? '' : v)
-              setPage(1)
-            }}
+            onValueChange={(v) => { setPayTypeFilter(v === 'all' ? '' : v); setPage(1) }}
           >
-            <SelectTrigger className='w-44'>
+            <SelectTrigger className='w-44 border-black/[0.08] rounded-xl text-sm focus:ring-2 focus:ring-black/[0.15]'>
               <SelectValue placeholder='All Pay Types' />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>All Pay Types</SelectItem>
               {PAY_TYPES.map((t) => (
-                <SelectItem key={t.value} value={t.value}>
-                  {t.label}
-                </SelectItem>
+                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
 
           <Select
             value={statusFilter}
-            onValueChange={(v) => {
-              setStatusFilter(v === 'all' ? '' : v)
-              setPage(1)
-            }}
+            onValueChange={(v) => { setStatusFilter(v === 'all' ? '' : v); setPage(1) }}
           >
-            <SelectTrigger className='w-40'>
+            <SelectTrigger className='w-40 border-black/[0.08] rounded-xl text-sm focus:ring-2 focus:ring-black/[0.15]'>
               <SelectValue placeholder='All Statuses' />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value='all'>All Statuses</SelectItem>
               {PAYROLL_STATUS.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
-                  {s.label}
-                </SelectItem>
+                <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
 
+        {/* Table */}
         {isLoading ? (
-          <div className='flex justify-center py-12'>
-            <Loader2 className='h-8 w-8 animate-spin' />
+          <div className='glass-card rounded-2xl p-16 flex items-center justify-center'>
+            <Loader2 className='h-7 w-7 animate-spin text-gray-400' />
           </div>
         ) : (
           <>
-            <div className='rounded-md border'>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Staff</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Pay Type</TableHead>
-                    <TableHead className='text-right'>Rate</TableHead>
-                    <TableHead className='text-right'>Gross</TableHead>
-                    <TableHead className='text-right'>Deductions</TableHead>
-                    <TableHead className='text-right'>Net</TableHead>
-                    <TableHead>Period</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className='w-10' />
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+            <div className='glass-card rounded-2xl overflow-hidden'>
+              <table className='w-full'>
+                <thead className='bg-gray-50 border-b border-gray-200'>
+                  <tr>
+                    <th scope='col' className='px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Staff</th>
+                    <th scope='col' className='px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Role</th>
+                    <th scope='col' className='px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Pay Type</th>
+                    <th scope='col' className='px-4 py-3 text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Rate</th>
+                    <th scope='col' className='px-4 py-3 text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Gross</th>
+                    <th scope='col' className='px-4 py-3 text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Deductions</th>
+                    <th scope='col' className='px-4 py-3 text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Net</th>
+                    <th scope='col' className='px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Period</th>
+                    <th scope='col' className='px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wider'>Status</th>
+                    <th scope='col' className='w-10' />
+                  </tr>
+                </thead>
+                <tbody className='divide-y divide-black/[0.04]'>
                   {records.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={10} className='py-8 text-center text-muted-foreground'>
+                    <tr>
+                      <td colSpan={10} className='px-4 py-16 text-center text-sm text-gray-400'>
                         No payroll entries yet.
-                      </TableCell>
-                    </TableRow>
+                      </td>
+                    </tr>
                   ) : (
                     records.map((row) => (
-                      <TableRow key={row.id}>
-                        <TableCell className='font-medium'>
-                          {row.staffName}
-                          <span className='block text-xs text-muted-foreground'>
-                            {row.staffEmail ?? 'No email'}
-                          </span>
-                        </TableCell>
-                        <TableCell>{row.role}</TableCell>
-                        <TableCell>{row.payType}</TableCell>
-                        <TableCell className='text-right'>{formatCurrency(row.payRate)}</TableCell>
-                        <TableCell className='text-right'>{formatCurrency(row.grossAmount)}</TableCell>
-                        <TableCell className='text-right'>{formatCurrency(row.deductions)}</TableCell>
-                        <TableCell className='text-right font-medium'>{formatCurrency(row.netAmount)}</TableCell>
-                        <TableCell className='text-xs'>
-                          {new Date(row.periodStart).toLocaleDateString()} -{' '}
+                      <tr
+                        key={row.id}
+                        className='hover:bg-gray-50/40 transition-colors'
+                      >
+                        <td className='px-4 py-3'>
+                          <div className='text-sm font-medium text-gray-900'>{row.staffName}</div>
+                          <div className='text-xs text-gray-400'>{row.staffEmail ?? 'No email'}</div>
+                        </td>
+                        <td className='px-4 py-3 text-sm text-gray-700'>{row.role}</td>
+                        <td className='px-4 py-3 text-sm text-gray-700'>{row.payType}</td>
+                        <td className='px-4 py-3 text-right font-mono text-xs text-gray-700'>{fmt(row.payRate)}</td>
+                        <td className='px-4 py-3 text-right font-mono text-xs text-gray-700'>{fmt(row.grossAmount)}</td>
+                        <td className='px-4 py-3 text-right font-mono text-xs text-gray-700'>{fmt(row.deductions)}</td>
+                        <td className='px-4 py-3 text-right font-mono text-xs font-semibold text-gray-900'>{fmt(row.netAmount)}</td>
+                        <td className='px-4 py-3 text-xs text-gray-500'>
+                          {new Date(row.periodStart).toLocaleDateString()} –{' '}
                           {new Date(row.periodEnd).toLocaleDateString()}
-                        </TableCell>
-                        <TableCell>{getStatusBadge(row.status)}</TableCell>
-                        <TableCell>
+                        </td>
+                        <td className='px-4 py-3'>
+                          <StatusBadge status={row.status} />
+                        </td>
+                        <td className='px-4 py-3'>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant='ghost' size='icon' className='h-8 w-8'>
+                              <button
+                                className='p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-black/[0.15]'
+                                aria-label='Row actions'
+                              >
                                 <MoreHorizontal className='h-4 w-4' />
-                              </Button>
+                              </button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align='end'>
                               <DropdownMenuItem onClick={() => setEditRecord(row)}>
@@ -329,7 +359,7 @@ export default function StaffPayrollPage() {
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               <DropdownMenuItem
-                                className='text-destructive'
+                                className='text-red-600'
                                 onClick={() => setDeleteId(row.id)}
                               >
                                 <Trash2 className='mr-2 h-4 w-4' />
@@ -337,36 +367,37 @@ export default function StaffPayrollPage() {
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
+                        </td>
+                      </tr>
                     ))
                   )}
-                </TableBody>
-              </Table>
+                </tbody>
+              </table>
             </div>
 
+            {/* Pagination */}
             {meta && meta.totalPages > 1 && (
               <div className='mt-4 flex items-center justify-between'>
-                <p className='text-sm text-muted-foreground'>
+                <p className='text-sm text-gray-500'>
                   Page {meta.page} of {meta.totalPages} ({meta.total} total)
                 </p>
                 <div className='flex gap-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
+                  <button
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
+                    className='px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-black/[0.15]'
                   >
+                    <ChevronLeft className='h-3.5 w-3.5' />
                     Previous
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
+                  </button>
+                  <button
                     disabled={page >= meta.totalPages}
                     onClick={() => setPage((p) => p + 1)}
+                    className='px-3 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 text-sm font-medium rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 focus:outline-none focus:ring-2 focus:ring-black/[0.15]'
                   >
                     Next
-                  </Button>
+                    <ChevronRight className='h-3.5 w-3.5' />
+                  </button>
                 </div>
               </div>
             )}
@@ -393,10 +424,12 @@ export default function StaffPayrollPage() {
         open={!!deleteId}
         onOpenChange={(o) => !o && setDeleteId(null)}
         title='Delete Payroll Entry'
-        description='Are you sure you want to delete this payroll entry?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this payroll entry?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
+        destructive
       />
     </>
   )
 }
+

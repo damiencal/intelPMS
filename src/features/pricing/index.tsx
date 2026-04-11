@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Loader2, Plus } from 'lucide-react'
+import { Loader2, Plus, Scale, Crosshair } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -51,12 +52,26 @@ export function PricingRules() {
               Configure dynamic pricing rules for your listings.
             </p>
           </div>
-          {rules && rules.length > 0 && (
-            <Button onClick={handleCreate}>
-              <Plus className='mr-2 h-4 w-4' />
-              Create Rule
-            </Button>
-          )}
+          <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-1'>
+              <Link to='/rate-parity'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Rate Parity'>
+                  <Scale size={16} />
+                </Button>
+              </Link>
+              <Link to='/competitor-rates'>
+                <Button variant='ghost' size='icon' className='h-8 w-8' title='Competitor Rates'>
+                  <Crosshair size={16} />
+                </Button>
+              </Link>
+            </div>
+            {rules && rules.length > 0 && (
+              <Button onClick={handleCreate}>
+                <Plus className='mr-2 h-4 w-4' />
+                Create Rule
+              </Button>
+            )}
+          </div>
         </div>
 
         {isLoading ? (

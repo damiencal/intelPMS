@@ -1,10 +1,12 @@
-import { Loader2 } from 'lucide-react'
+import { Loader2, CalendarClock } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
+import { Button } from '@/components/ui/button'
 import { useTeamMembers } from './api'
 import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
@@ -33,7 +35,14 @@ export function Users() {
               Manage your team members and their roles.
             </p>
           </div>
-          <UsersPrimaryButtons />
+          <div className='flex items-center gap-2'>
+            <Link to='/team-shifts'>
+              <Button variant='ghost' size='icon' className='h-8 w-8' title='Team Scheduling'>
+                <CalendarClock size={16} />
+              </Button>
+            </Link>
+            <UsersPrimaryButtons />
+          </div>
         </div>
         {isLoading ? (
           <div className='flex flex-1 items-center justify-center'>
