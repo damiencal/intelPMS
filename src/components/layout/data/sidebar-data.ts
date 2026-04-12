@@ -24,6 +24,19 @@ import {
   RefreshCw,
   Heart,
   MessageSquareHeart,
+  LayoutTemplate,
+  Bot,
+  Key,
+  CalendarClock,
+  BookOpen,
+  Shield,
+  Zap,
+  FileSearch,
+  Banknote,
+  Wallet,
+  TrendingUp,
+  ArrowLeftRight,
+  LineChart,
 } from 'lucide-react'
 import { type SidebarData } from '../types'
 
@@ -84,6 +97,16 @@ export const sidebarData: SidebarData = {
           url: '/loyalty',
           icon: Heart,
         },
+        {
+          title: 'Message Templates',
+          url: '/messaging',
+          icon: LayoutTemplate,
+        },
+        {
+          title: 'Auto Messages',
+          url: '/auto-messages',
+          icon: Bot,
+        },
       ],
     },
     {
@@ -113,6 +136,21 @@ export const sidebarData: SidebarData = {
           title: 'Notifications',
           url: '/notifications',
           icon: BellRing,
+        },
+        {
+          title: 'Key Handovers',
+          url: '/key-handovers',
+          icon: Key,
+        },
+        {
+          title: 'Team Shifts',
+          url: '/team-shifts',
+          icon: CalendarClock,
+        },
+        {
+          title: 'Concierge',
+          url: '/concierge',
+          icon: BookOpen,
         },
       ],
     },
@@ -149,6 +187,31 @@ export const sidebarData: SidebarData = {
           url: '/owner-statements',
           icon: PieChart,
         },
+        {
+          title: 'Insurance',
+          url: '/insurance',
+          icon: Shield,
+        },
+        {
+          title: 'Utilities',
+          url: '/utilities',
+          icon: Zap,
+        },
+        {
+          title: 'Tax Reports',
+          url: '/tax-reports',
+          icon: FileSearch,
+        },
+        {
+          title: 'Security Deposits',
+          url: '/security-deposits',
+          icon: Banknote,
+        },
+        {
+          title: 'Staff Payroll',
+          url: '/staff-payroll',
+          icon: Wallet,
+        },
       ],
     },
     {
@@ -174,6 +237,14 @@ export const sidebarData: SidebarData = {
               title: 'Dynamic Pricing',
               url: '/pricing-recommendations',
             },
+            {
+              title: 'Rate Parity',
+              url: '/rate-parity',
+            },
+            {
+              title: 'Competitor Rates',
+              url: '/competitor-rates',
+            },
           ],
         },
       ],
@@ -190,6 +261,21 @@ export const sidebarData: SidebarData = {
           title: 'Reports',
           url: '/reports',
           icon: FileBarChart,
+        },
+        {
+          title: 'Revenue Forecast',
+          url: '/revenue-forecast',
+          icon: TrendingUp,
+        },
+        {
+          title: 'Property Comparison',
+          url: '/property-comparison',
+          icon: ArrowLeftRight,
+        },
+        {
+          title: 'Portfolio',
+          url: '/portfolio',
+          icon: LineChart,
         },
       ],
     },

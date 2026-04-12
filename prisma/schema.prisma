@@ -23,6 +23,8 @@ model Organization {
 
   users              User[]
   connections        HostexConnection[]
+  channexConnections ChannexConnection[]
+  channexProperties  ChannexProperty[]
   properties         Property[]
   pricingRules       PricingRule[]
   seasonalStrategies SeasonalStrategy[]
@@ -95,6 +97,148 @@ model HostexConnection {
   properties Property[]
 
   @@index([organizationId])
+}
+
+// ==========================================
+// Channex Connections
+// ==========================================
+
+model ChannexConnection {
+  id             String    @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  label          String    @db.VarChar(255)
+  apiKey         String    @db.Text // encrypted (AES-256-GCM)
+  isActive       Boolean   @default(true)
+  lastSyncAt     DateTime?
+  syncStatus     String?   @db.VarChar(50) // null, "syncing", "completed", "failed"
+  syncError      String?   @db.Text
+  webhookId      String?   @db.VarChar(255) // Channex global webhook UUID
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  channexProperties ChannexProperty[]
+
+  @@index([organizationId])
+}
+
+model ChannexProperty {
+  id             String            @id @default(cuid())
+  channexId      String            @unique @db.VarChar(255) // UUID from Channex
+  connectionId   String
+  connection     ChannexConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String            @db.VarChar(255)
+  currency       String            @default("USD") @db.VarChar(10)
+  timezone       String            @default("UTC") @db.VarChar(100)
+  address        String?           @db.VarChar(500)
+  country        String?           @db.VarChar(10)
+  email          String?           @db.VarChar(255)
+  phone          String?           @db.VarChar(100)
+  metadata       Json?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  roomTypes    ChannexRoomType[]
+  ratePlans    ChannexRatePlan[]
+  bookings     ChannexBooking[]
+
+  @@index([organizationId])
+  @@index([connectionId])
+}
+
+model ChannexRoomType {
+  id         String          @id @default(cuid())
+  channexId  String          @unique @db.VarChar(255)
+  propertyId String
+  property   ChannexProperty @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  name       String          @db.VarChar(255)
+  maxGuests  Int?
+  metadata   Json?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  ratePlans    ChannexRatePlan[]
+  bookingRooms ChannexBookingRoom[]
+
+  @@index([propertyId])
+}
+
+model ChannexRatePlan {
+  id         String          @id @default(cuid())
+  channexId  String          @unique @db.VarChar(255)
+  propertyId String
+  property   ChannexProperty @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  roomTypeId String
+  roomType   ChannexRoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+  name       String          @db.VarChar(255)
+  currency   String          @default("USD") @db.VarChar(10)
+  ratePlanCategory String?   @db.VarChar(50) // per_room, per_person
+  sellMode   String?         @db.VarChar(50) // per_room, per_person
+  metadata   Json?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  bookingRooms ChannexBookingRoom[]
+
+  @@index([propertyId])
+  @@index([roomTypeId])
+}
+
+model ChannexBooking {
+  id                 String          @id @default(cuid())
+  channexId          String          @unique @db.VarChar(255) // booking_id from Channex
+  revisionId         String?         @db.VarChar(255) // latest acked revision_id
+  propertyId         String
+  property           ChannexProperty @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  uniqueId           String?         @db.VarChar(255) // e.g. "BDC-3333333333"
+  otaName            String?         @db.VarChar(100) // BookingCom, Airbnb, etc.
+  otaReservationCode String?         @db.VarChar(255)
+  status             String          @db.VarChar(50) // new, modified, cancelled
+  arrivalDate        DateTime        @db.Date
+  departureDate      DateTime        @db.Date
+  guestName          String?         @db.VarChar(255)
+  guestEmail         String?         @db.VarChar(255)
+  guestPhone         String?         @db.VarChar(100)
+  amount             Float?
+  currency           String          @default("USD") @db.VarChar(10)
+  numAdults          Int             @default(1)
+  numChildren        Int             @default(0)
+  notes              String?         @db.Text
+  paymentCollect     String?         @db.VarChar(50) // property, ota
+  paymentType        String?         @db.VarChar(50) // credit_card, bank_transfer
+  acknowledged       Boolean         @default(false)
+  metadata           Json?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  rooms ChannexBookingRoom[]
+
+  @@index([propertyId])
+  @@index([arrivalDate])
+  @@index([status])
+}
+
+model ChannexBookingRoom {
+  id           String           @id @default(cuid())
+  bookingId    String
+  booking      ChannexBooking   @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  roomTypeId   String?
+  roomType     ChannexRoomType? @relation(fields: [roomTypeId], references: [id], onDelete: SetNull)
+  ratePlanId   String?
+  ratePlan     ChannexRatePlan? @relation(fields: [ratePlanId], references: [id], onDelete: SetNull)
+  checkinDate  DateTime         @db.Date
+  checkoutDate DateTime         @db.Date
+  amount       Float?
+  numAdults    Int              @default(1)
+  numChildren  Int              @default(0)
+  days         Json?            // { "2024-01-01": "100.00" }
+  metadata     Json?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([bookingId])
 }
 
 // ==========================================

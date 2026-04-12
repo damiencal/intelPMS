@@ -1,6 +1,9 @@
 import { registerJobHandler } from '../job-queue'
 import { prisma } from '../prisma'
 import { initialSync } from '../sync/initial-sync'
+import { channexInitialSync, upsertChannexBookingFromRevision } from '../sync/channex-sync'
+import { ChannexClient } from '../channex/client'
+import type { ChannexBookingRevisionAttributes } from '../channex/types'
 
 // ---- Helpers for individual webhook event types ----
 
@@ -310,4 +313,131 @@ export function registerAllJobHandlers(): void {
     console.log(`[Jobs] Processing email job:`, payload)
     // Email sending will be implemented in Phase 5
   })
+
+  // Channex sync jobs
+  registerJobHandler('channex_sync', async (payload) => {
+    const { type, connectionId, organizationId } = payload as {
+      type: string
+      connectionId: string
+      organizationId: string
+    }
+
+    switch (type) {
+      case 'initial_sync':
+      case 'full_sync':
+        await channexInitialSync(connectionId, organizationId)
+        break
+      default:
+        console.warn(`[Jobs] Unknown channex_sync job type: ${type}`)
+    }
+  })
+
+  // Channex webhook event processing
+  registerJobHandler('channex_webhook', async (payload) => {
+    const { event, data, channexPropertyId, connectionId, organizationId } = payload as {
+      event: string
+      data: unknown
+      channexPropertyId: string
+      connectionId: string
+      organizationId: string
+    }
+
+    console.log(`[Jobs] Processing Channex webhook event: ${event} (property ${channexPropertyId})`)
+
+    try {
+      switch (event) {
+        case 'booking_new':
+        case 'booking_modification':
+        case 'booking_cancellation':
+        case 'booking': {
+          // The webhook may contain full revision data (send_data=true)
+          // or just identifiers (send_data=false). Pull from API if needed.
+          const bookingData = data as Record<string, unknown> | null
+
+          if (
+            bookingData &&
+            bookingData.booking_id &&
+            bookingData.rooms
+          ) {
+            // Full data provided — upsert directly
+            await upsertChannexBookingFromRevision(
+              bookingData as unknown as ChannexBookingRevisionAttributes,
+              organizationId
+            )
+            // Ack the revision
+            const revisionId = String(bookingData.revision_id || '')
+            if (revisionId) {
+              const client = new ChannexClient(connectionId)
+              await client.acknowledgeBookingRevision(revisionId).catch(() => {})
+            }
+          } else if (bookingData?.booking_id) {
+            // Only IDs provided — pull from API, ack, and upsert
+            const client = new ChannexClient(connectionId)
+            const revisionId = String(bookingData.revision_id || '')
+            if (revisionId) {
+              const res = await client.getBookingRevision(revisionId)
+              await upsertChannexBookingFromRevision(
+                res.data.attributes as unknown as ChannexBookingRevisionAttributes,
+                organizationId
+              )
+              await client.acknowledgeBookingRevision(revisionId).catch(() => {})
+            }
+          } else {
+            // No usable data — pull the feed for this property to pick up missed bookings
+            const client = new ChannexClient(connectionId)
+            await pullFeedForProperty(client, channexPropertyId, organizationId)
+          }
+
+          await prisma.activityLog.create({
+            data: {
+              organizationId,
+              type: `channex_booking_${event.replace('booking_', '')}`,
+              description: `Channex booking event received: ${event}`,
+              metadata: { event, channexPropertyId },
+            },
+          })
+          break
+        }
+
+        case 'ari': {
+          // ARI change — use as a trigger to log, not to update our DB
+          // (we pull ARI from Channex on-demand; we push ARI to Channex)
+          console.log(`[ChannexWebhook] ARI change for property ${channexPropertyId}`)
+          break
+        }
+
+        default:
+          console.log(`[Jobs] Unhandled Channex event: ${event}`)
+      }
+    } catch (err) {
+      console.error(`[Jobs] Error processing Channex webhook event ${event}:`, err)
+      await prisma.activityLog.create({
+        data: {
+          organizationId,
+          type: 'channex_webhook_error',
+          description: `Failed to process Channex event: ${event} — ${err instanceof Error ? err.message : String(err)}`,
+          metadata: { event, channexPropertyId, error: String(err) },
+        },
+      })
+    }
+  })
+}
+
+/** Pull the booking revisions feed for a specific property and ack. */
+async function pullFeedForProperty(
+  client: ChannexClient,
+  channexPropertyId: string,
+  organizationId: string
+): Promise<void> {
+  const feed = await client.getBookingRevisionsFeed({
+    'filter[property_id]': channexPropertyId,
+    'order[inserted_at]': 'asc',
+  })
+
+  for (const rev of feed.data ?? []) {
+    const attr = rev.attributes as ChannexBookingRevisionAttributes
+    await upsertChannexBookingFromRevision(attr, organizationId)
+    const revId = attr.revision_id || rev.id
+    await client.acknowledgeBookingRevision(revId).catch(() => {})
+  }
 }

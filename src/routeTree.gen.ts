@@ -56,6 +56,7 @@ import { Route as AuthenticatedGuestFeedbackIndexRouteImport } from './routes/_a
 import { Route as AuthenticatedGuestCheckinsIndexRouteImport } from './routes/_authenticated/guest-checkins/index'
 import { Route as AuthenticatedExpensesIndexRouteImport } from './routes/_authenticated/expenses/index'
 import { Route as AuthenticatedDocumentsIndexRouteImport } from './routes/_authenticated/documents/index'
+import { Route as AuthenticatedConciergeIndexRouteImport } from './routes/_authenticated/concierge/index'
 import { Route as AuthenticatedCompetitorRatesIndexRouteImport } from './routes/_authenticated/competitor-rates/index'
 import { Route as AuthenticatedCleaningIndexRouteImport } from './routes/_authenticated/cleaning/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
@@ -339,6 +340,12 @@ const AuthenticatedDocumentsIndexRoute =
     path: '/documents/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedConciergeIndexRoute =
+  AuthenticatedConciergeIndexRouteImport.update({
+    id: '/concierge/',
+    path: '/concierge/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedCompetitorRatesIndexRoute =
   AuthenticatedCompetitorRatesIndexRouteImport.update({
     id: '/competitor-rates/',
@@ -490,6 +497,7 @@ export interface FileRoutesByFullPath {
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/cleaning': typeof AuthenticatedCleaningIndexRoute
   '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/concierge': typeof AuthenticatedConciergeIndexRoute
   '/documents': typeof AuthenticatedDocumentsIndexRoute
   '/expenses': typeof AuthenticatedExpensesIndexRoute
   '/guest-checkins': typeof AuthenticatedGuestCheckinsIndexRoute
@@ -555,6 +563,7 @@ export interface FileRoutesByTo {
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/cleaning': typeof AuthenticatedCleaningIndexRoute
   '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/concierge': typeof AuthenticatedConciergeIndexRoute
   '/documents': typeof AuthenticatedDocumentsIndexRoute
   '/expenses': typeof AuthenticatedExpensesIndexRoute
   '/guest-checkins': typeof AuthenticatedGuestCheckinsIndexRoute
@@ -625,6 +634,7 @@ export interface FileRoutesById {
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/cleaning/': typeof AuthenticatedCleaningIndexRoute
   '/_authenticated/competitor-rates/': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/_authenticated/concierge/': typeof AuthenticatedConciergeIndexRoute
   '/_authenticated/documents/': typeof AuthenticatedDocumentsIndexRoute
   '/_authenticated/expenses/': typeof AuthenticatedExpensesIndexRoute
   '/_authenticated/guest-checkins/': typeof AuthenticatedGuestCheckinsIndexRoute
@@ -693,6 +703,7 @@ export interface FileRouteTypes {
     | '/chats'
     | '/cleaning'
     | '/competitor-rates'
+    | '/concierge'
     | '/documents'
     | '/expenses'
     | '/guest-checkins'
@@ -758,6 +769,7 @@ export interface FileRouteTypes {
     | '/chats'
     | '/cleaning'
     | '/competitor-rates'
+    | '/concierge'
     | '/documents'
     | '/expenses'
     | '/guest-checkins'
@@ -827,6 +839,7 @@ export interface FileRouteTypes {
     | '/_authenticated/chats/'
     | '/_authenticated/cleaning/'
     | '/_authenticated/competitor-rates/'
+    | '/_authenticated/concierge/'
     | '/_authenticated/documents/'
     | '/_authenticated/expenses/'
     | '/_authenticated/guest-checkins/'
@@ -1206,6 +1219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDocumentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/concierge/': {
+      id: '/_authenticated/concierge/'
+      path: '/concierge'
+      fullPath: '/concierge'
+      preLoaderRoute: typeof AuthenticatedConciergeIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/competitor-rates/': {
       id: '/_authenticated/competitor-rates/'
       path: '/competitor-rates'
@@ -1390,6 +1410,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedCleaningIndexRoute: typeof AuthenticatedCleaningIndexRoute
   AuthenticatedCompetitorRatesIndexRoute: typeof AuthenticatedCompetitorRatesIndexRoute
+  AuthenticatedConciergeIndexRoute: typeof AuthenticatedConciergeIndexRoute
   AuthenticatedDocumentsIndexRoute: typeof AuthenticatedDocumentsIndexRoute
   AuthenticatedExpensesIndexRoute: typeof AuthenticatedExpensesIndexRoute
   AuthenticatedGuestCheckinsIndexRoute: typeof AuthenticatedGuestCheckinsIndexRoute
@@ -1439,6 +1460,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedCleaningIndexRoute: AuthenticatedCleaningIndexRoute,
   AuthenticatedCompetitorRatesIndexRoute:
     AuthenticatedCompetitorRatesIndexRoute,
+  AuthenticatedConciergeIndexRoute: AuthenticatedConciergeIndexRoute,
   AuthenticatedDocumentsIndexRoute: AuthenticatedDocumentsIndexRoute,
   AuthenticatedExpensesIndexRoute: AuthenticatedExpensesIndexRoute,
   AuthenticatedGuestCheckinsIndexRoute: AuthenticatedGuestCheckinsIndexRoute,

@@ -44,6 +44,7 @@ import pricingRecsRoutes from './routes/pricing-recommendations'
 import portfolioRoutes from './routes/portfolio'
 import staffPayrollRoutes from './routes/staff-payroll'
 import channelSyncRoutes from './routes/channel-sync'
+import channexConnectionRoutes from './routes/channex-connections'
 import { startJobProcessor } from './lib/job-queue'
 import { registerAllJobHandlers } from './lib/jobs/handlers'
 
@@ -115,6 +116,7 @@ app.use('/api/pricing-recommendations/*', authMiddleware)
 app.use('/api/portfolio/*', authMiddleware)
 app.use('/api/staff-payroll/*', authMiddleware)
 app.use('/api/channel-sync/*', authMiddleware)
+app.use('/api/channex-connections/*', authMiddleware)
 
 app.route('/api/connections', connectionRoutes)
 app.route('/api/properties', propertyRoutes)
@@ -155,6 +157,7 @@ app.route('/api/pricing-recommendations', pricingRecsRoutes)
 app.route('/api/portfolio', portfolioRoutes)
 app.route('/api/staff-payroll', staffPayrollRoutes)
 app.route('/api/channel-sync', channelSyncRoutes)
+app.route('/api/channex-connections', channexConnectionRoutes)
 
 // ==========================================
 // Static file serving (production only)
