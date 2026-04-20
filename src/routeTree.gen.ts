@@ -464,6 +464,7 @@ const AuthenticatedErrorsErrorRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
   '/settings': typeof AuthenticatedSettingsRouteRouteWithChildren
   '/forgot-password': typeof authForgotPasswordRoute
@@ -476,7 +477,6 @@ export interface FileRoutesByFullPath {
   '/404': typeof errors404Route
   '/500': typeof errors500Route
   '/503': typeof errors503Route
-  '/': typeof AuthenticatedIndexRoute
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/pricing/proposals': typeof AuthenticatedPricingProposalsRoute
   '/pricing/rules': typeof AuthenticatedPricingRulesRoute
@@ -490,45 +490,45 @@ export interface FileRoutesByFullPath {
   '/clerk/sign-in': typeof ClerkauthSignInRoute
   '/clerk/sign-up': typeof ClerkauthSignUpRoute
   '/clerk/user-management': typeof ClerkAuthenticatedUserManagementRoute
-  '/analytics': typeof AuthenticatedAnalyticsIndexRoute
-  '/apps': typeof AuthenticatedAppsIndexRoute
-  '/auto-messages': typeof AuthenticatedAutoMessagesIndexRoute
-  '/channel-sync': typeof AuthenticatedChannelSyncIndexRoute
-  '/chats': typeof AuthenticatedChatsIndexRoute
-  '/cleaning': typeof AuthenticatedCleaningIndexRoute
-  '/competitor-rates': typeof AuthenticatedCompetitorRatesIndexRoute
-  '/concierge': typeof AuthenticatedConciergeIndexRoute
-  '/documents': typeof AuthenticatedDocumentsIndexRoute
-  '/expenses': typeof AuthenticatedExpensesIndexRoute
-  '/guest-checkins': typeof AuthenticatedGuestCheckinsIndexRoute
-  '/guest-feedback': typeof AuthenticatedGuestFeedbackIndexRoute
-  '/help-center': typeof AuthenticatedHelpCenterIndexRoute
-  '/insurance': typeof AuthenticatedInsuranceIndexRoute
-  '/inventory': typeof AuthenticatedInventoryIndexRoute
-  '/key-handovers': typeof AuthenticatedKeyHandoversIndexRoute
-  '/loyalty': typeof AuthenticatedLoyaltyIndexRoute
-  '/maintenance': typeof AuthenticatedMaintenanceIndexRoute
-  '/messaging': typeof AuthenticatedMessagingIndexRoute
-  '/notifications': typeof AuthenticatedNotificationsIndexRoute
-  '/owner-statements': typeof AuthenticatedOwnerStatementsIndexRoute
-  '/portfolio': typeof AuthenticatedPortfolioIndexRoute
-  '/pricing-recommendations': typeof AuthenticatedPricingRecommendationsIndexRoute
-  '/properties': typeof AuthenticatedPropertiesIndexRoute
-  '/property-comparison': typeof AuthenticatedPropertyComparisonIndexRoute
-  '/rate-parity': typeof AuthenticatedRateParityIndexRoute
-  '/reports': typeof AuthenticatedReportsIndexRoute
-  '/reservations': typeof AuthenticatedReservationsIndexRoute
-  '/revenue-forecast': typeof AuthenticatedRevenueForecastIndexRoute
-  '/reviews': typeof AuthenticatedReviewsIndexRoute
-  '/security-deposits': typeof AuthenticatedSecurityDepositsIndexRoute
+  '/analytics/': typeof AuthenticatedAnalyticsIndexRoute
+  '/apps/': typeof AuthenticatedAppsIndexRoute
+  '/auto-messages/': typeof AuthenticatedAutoMessagesIndexRoute
+  '/channel-sync/': typeof AuthenticatedChannelSyncIndexRoute
+  '/chats/': typeof AuthenticatedChatsIndexRoute
+  '/cleaning/': typeof AuthenticatedCleaningIndexRoute
+  '/competitor-rates/': typeof AuthenticatedCompetitorRatesIndexRoute
+  '/concierge/': typeof AuthenticatedConciergeIndexRoute
+  '/documents/': typeof AuthenticatedDocumentsIndexRoute
+  '/expenses/': typeof AuthenticatedExpensesIndexRoute
+  '/guest-checkins/': typeof AuthenticatedGuestCheckinsIndexRoute
+  '/guest-feedback/': typeof AuthenticatedGuestFeedbackIndexRoute
+  '/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/insurance/': typeof AuthenticatedInsuranceIndexRoute
+  '/inventory/': typeof AuthenticatedInventoryIndexRoute
+  '/key-handovers/': typeof AuthenticatedKeyHandoversIndexRoute
+  '/loyalty/': typeof AuthenticatedLoyaltyIndexRoute
+  '/maintenance/': typeof AuthenticatedMaintenanceIndexRoute
+  '/messaging/': typeof AuthenticatedMessagingIndexRoute
+  '/notifications/': typeof AuthenticatedNotificationsIndexRoute
+  '/owner-statements/': typeof AuthenticatedOwnerStatementsIndexRoute
+  '/portfolio/': typeof AuthenticatedPortfolioIndexRoute
+  '/pricing-recommendations/': typeof AuthenticatedPricingRecommendationsIndexRoute
+  '/properties/': typeof AuthenticatedPropertiesIndexRoute
+  '/property-comparison/': typeof AuthenticatedPropertyComparisonIndexRoute
+  '/rate-parity/': typeof AuthenticatedRateParityIndexRoute
+  '/reports/': typeof AuthenticatedReportsIndexRoute
+  '/reservations/': typeof AuthenticatedReservationsIndexRoute
+  '/revenue-forecast/': typeof AuthenticatedRevenueForecastIndexRoute
+  '/reviews/': typeof AuthenticatedReviewsIndexRoute
+  '/security-deposits/': typeof AuthenticatedSecurityDepositsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
-  '/staff-payroll': typeof AuthenticatedStaffPayrollIndexRoute
-  '/tasks': typeof AuthenticatedTasksIndexRoute
-  '/tax-reports': typeof AuthenticatedTaxReportsIndexRoute
-  '/team-shifts': typeof AuthenticatedTeamShiftsIndexRoute
-  '/users': typeof AuthenticatedUsersIndexRoute
-  '/utilities': typeof AuthenticatedUtilitiesIndexRoute
-  '/vendors': typeof AuthenticatedVendorsIndexRoute
+  '/staff-payroll/': typeof AuthenticatedStaffPayrollIndexRoute
+  '/tasks/': typeof AuthenticatedTasksIndexRoute
+  '/tax-reports/': typeof AuthenticatedTaxReportsIndexRoute
+  '/team-shifts/': typeof AuthenticatedTeamShiftsIndexRoute
+  '/users/': typeof AuthenticatedUsersIndexRoute
+  '/utilities/': typeof AuthenticatedUtilitiesIndexRoute
+  '/vendors/': typeof AuthenticatedVendorsIndexRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -670,6 +670,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/clerk'
     | '/settings'
     | '/forgot-password'
@@ -682,7 +683,6 @@ export interface FileRouteTypes {
     | '/404'
     | '/500'
     | '/503'
-    | '/'
     | '/errors/$error'
     | '/pricing/proposals'
     | '/pricing/rules'
@@ -696,45 +696,45 @@ export interface FileRouteTypes {
     | '/clerk/sign-in'
     | '/clerk/sign-up'
     | '/clerk/user-management'
-    | '/analytics'
-    | '/apps'
-    | '/auto-messages'
-    | '/channel-sync'
-    | '/chats'
-    | '/cleaning'
-    | '/competitor-rates'
-    | '/concierge'
-    | '/documents'
-    | '/expenses'
-    | '/guest-checkins'
-    | '/guest-feedback'
-    | '/help-center'
-    | '/insurance'
-    | '/inventory'
-    | '/key-handovers'
-    | '/loyalty'
-    | '/maintenance'
-    | '/messaging'
-    | '/notifications'
-    | '/owner-statements'
-    | '/portfolio'
-    | '/pricing-recommendations'
-    | '/properties'
-    | '/property-comparison'
-    | '/rate-parity'
-    | '/reports'
-    | '/reservations'
-    | '/revenue-forecast'
-    | '/reviews'
-    | '/security-deposits'
+    | '/analytics/'
+    | '/apps/'
+    | '/auto-messages/'
+    | '/channel-sync/'
+    | '/chats/'
+    | '/cleaning/'
+    | '/competitor-rates/'
+    | '/concierge/'
+    | '/documents/'
+    | '/expenses/'
+    | '/guest-checkins/'
+    | '/guest-feedback/'
+    | '/help-center/'
+    | '/insurance/'
+    | '/inventory/'
+    | '/key-handovers/'
+    | '/loyalty/'
+    | '/maintenance/'
+    | '/messaging/'
+    | '/notifications/'
+    | '/owner-statements/'
+    | '/portfolio/'
+    | '/pricing-recommendations/'
+    | '/properties/'
+    | '/property-comparison/'
+    | '/rate-parity/'
+    | '/reports/'
+    | '/reservations/'
+    | '/revenue-forecast/'
+    | '/reviews/'
+    | '/security-deposits/'
     | '/settings/'
-    | '/staff-payroll'
-    | '/tasks'
-    | '/tax-reports'
-    | '/team-shifts'
-    | '/users'
-    | '/utilities'
-    | '/vendors'
+    | '/staff-payroll/'
+    | '/tasks/'
+    | '/tax-reports/'
+    | '/team-shifts/'
+    | '/users/'
+    | '/utilities/'
+    | '/vendors/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -900,7 +900,7 @@ declare module '@tanstack/react-router' {
     '/_authenticated': {
       id: '/_authenticated'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -1005,49 +1005,49 @@ declare module '@tanstack/react-router' {
     '/_authenticated/vendors/': {
       id: '/_authenticated/vendors/'
       path: '/vendors'
-      fullPath: '/vendors'
+      fullPath: '/vendors/'
       preLoaderRoute: typeof AuthenticatedVendorsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/utilities/': {
       id: '/_authenticated/utilities/'
       path: '/utilities'
-      fullPath: '/utilities'
+      fullPath: '/utilities/'
       preLoaderRoute: typeof AuthenticatedUtilitiesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/users/': {
       id: '/_authenticated/users/'
       path: '/users'
-      fullPath: '/users'
+      fullPath: '/users/'
       preLoaderRoute: typeof AuthenticatedUsersIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/team-shifts/': {
       id: '/_authenticated/team-shifts/'
       path: '/team-shifts'
-      fullPath: '/team-shifts'
+      fullPath: '/team-shifts/'
       preLoaderRoute: typeof AuthenticatedTeamShiftsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tax-reports/': {
       id: '/_authenticated/tax-reports/'
       path: '/tax-reports'
-      fullPath: '/tax-reports'
+      fullPath: '/tax-reports/'
       preLoaderRoute: typeof AuthenticatedTaxReportsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/tasks/': {
       id: '/_authenticated/tasks/'
       path: '/tasks'
-      fullPath: '/tasks'
+      fullPath: '/tasks/'
       preLoaderRoute: typeof AuthenticatedTasksIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/staff-payroll/': {
       id: '/_authenticated/staff-payroll/'
       path: '/staff-payroll'
-      fullPath: '/staff-payroll'
+      fullPath: '/staff-payroll/'
       preLoaderRoute: typeof AuthenticatedStaffPayrollIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
@@ -1061,217 +1061,217 @@ declare module '@tanstack/react-router' {
     '/_authenticated/security-deposits/': {
       id: '/_authenticated/security-deposits/'
       path: '/security-deposits'
-      fullPath: '/security-deposits'
+      fullPath: '/security-deposits/'
       preLoaderRoute: typeof AuthenticatedSecurityDepositsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reviews/': {
       id: '/_authenticated/reviews/'
       path: '/reviews'
-      fullPath: '/reviews'
+      fullPath: '/reviews/'
       preLoaderRoute: typeof AuthenticatedReviewsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/revenue-forecast/': {
       id: '/_authenticated/revenue-forecast/'
       path: '/revenue-forecast'
-      fullPath: '/revenue-forecast'
+      fullPath: '/revenue-forecast/'
       preLoaderRoute: typeof AuthenticatedRevenueForecastIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reservations/': {
       id: '/_authenticated/reservations/'
       path: '/reservations'
-      fullPath: '/reservations'
+      fullPath: '/reservations/'
       preLoaderRoute: typeof AuthenticatedReservationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reports/': {
       id: '/_authenticated/reports/'
       path: '/reports'
-      fullPath: '/reports'
+      fullPath: '/reports/'
       preLoaderRoute: typeof AuthenticatedReportsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/rate-parity/': {
       id: '/_authenticated/rate-parity/'
       path: '/rate-parity'
-      fullPath: '/rate-parity'
+      fullPath: '/rate-parity/'
       preLoaderRoute: typeof AuthenticatedRateParityIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/property-comparison/': {
       id: '/_authenticated/property-comparison/'
       path: '/property-comparison'
-      fullPath: '/property-comparison'
+      fullPath: '/property-comparison/'
       preLoaderRoute: typeof AuthenticatedPropertyComparisonIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/properties/': {
       id: '/_authenticated/properties/'
       path: '/properties'
-      fullPath: '/properties'
+      fullPath: '/properties/'
       preLoaderRoute: typeof AuthenticatedPropertiesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/pricing-recommendations/': {
       id: '/_authenticated/pricing-recommendations/'
       path: '/pricing-recommendations'
-      fullPath: '/pricing-recommendations'
+      fullPath: '/pricing-recommendations/'
       preLoaderRoute: typeof AuthenticatedPricingRecommendationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/portfolio/': {
       id: '/_authenticated/portfolio/'
       path: '/portfolio'
-      fullPath: '/portfolio'
+      fullPath: '/portfolio/'
       preLoaderRoute: typeof AuthenticatedPortfolioIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/owner-statements/': {
       id: '/_authenticated/owner-statements/'
       path: '/owner-statements'
-      fullPath: '/owner-statements'
+      fullPath: '/owner-statements/'
       preLoaderRoute: typeof AuthenticatedOwnerStatementsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/notifications/': {
       id: '/_authenticated/notifications/'
       path: '/notifications'
-      fullPath: '/notifications'
+      fullPath: '/notifications/'
       preLoaderRoute: typeof AuthenticatedNotificationsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/messaging/': {
       id: '/_authenticated/messaging/'
       path: '/messaging'
-      fullPath: '/messaging'
+      fullPath: '/messaging/'
       preLoaderRoute: typeof AuthenticatedMessagingIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/maintenance/': {
       id: '/_authenticated/maintenance/'
       path: '/maintenance'
-      fullPath: '/maintenance'
+      fullPath: '/maintenance/'
       preLoaderRoute: typeof AuthenticatedMaintenanceIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/loyalty/': {
       id: '/_authenticated/loyalty/'
       path: '/loyalty'
-      fullPath: '/loyalty'
+      fullPath: '/loyalty/'
       preLoaderRoute: typeof AuthenticatedLoyaltyIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/key-handovers/': {
       id: '/_authenticated/key-handovers/'
       path: '/key-handovers'
-      fullPath: '/key-handovers'
+      fullPath: '/key-handovers/'
       preLoaderRoute: typeof AuthenticatedKeyHandoversIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/inventory/': {
       id: '/_authenticated/inventory/'
       path: '/inventory'
-      fullPath: '/inventory'
+      fullPath: '/inventory/'
       preLoaderRoute: typeof AuthenticatedInventoryIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/insurance/': {
       id: '/_authenticated/insurance/'
       path: '/insurance'
-      fullPath: '/insurance'
+      fullPath: '/insurance/'
       preLoaderRoute: typeof AuthenticatedInsuranceIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
-      fullPath: '/help-center'
+      fullPath: '/help-center/'
       preLoaderRoute: typeof AuthenticatedHelpCenterIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/guest-feedback/': {
       id: '/_authenticated/guest-feedback/'
       path: '/guest-feedback'
-      fullPath: '/guest-feedback'
+      fullPath: '/guest-feedback/'
       preLoaderRoute: typeof AuthenticatedGuestFeedbackIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/guest-checkins/': {
       id: '/_authenticated/guest-checkins/'
       path: '/guest-checkins'
-      fullPath: '/guest-checkins'
+      fullPath: '/guest-checkins/'
       preLoaderRoute: typeof AuthenticatedGuestCheckinsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/expenses/': {
       id: '/_authenticated/expenses/'
       path: '/expenses'
-      fullPath: '/expenses'
+      fullPath: '/expenses/'
       preLoaderRoute: typeof AuthenticatedExpensesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/documents/': {
       id: '/_authenticated/documents/'
       path: '/documents'
-      fullPath: '/documents'
+      fullPath: '/documents/'
       preLoaderRoute: typeof AuthenticatedDocumentsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/concierge/': {
       id: '/_authenticated/concierge/'
       path: '/concierge'
-      fullPath: '/concierge'
+      fullPath: '/concierge/'
       preLoaderRoute: typeof AuthenticatedConciergeIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/competitor-rates/': {
       id: '/_authenticated/competitor-rates/'
       path: '/competitor-rates'
-      fullPath: '/competitor-rates'
+      fullPath: '/competitor-rates/'
       preLoaderRoute: typeof AuthenticatedCompetitorRatesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/cleaning/': {
       id: '/_authenticated/cleaning/'
       path: '/cleaning'
-      fullPath: '/cleaning'
+      fullPath: '/cleaning/'
       preLoaderRoute: typeof AuthenticatedCleaningIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/chats/': {
       id: '/_authenticated/chats/'
       path: '/chats'
-      fullPath: '/chats'
+      fullPath: '/chats/'
       preLoaderRoute: typeof AuthenticatedChatsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/channel-sync/': {
       id: '/_authenticated/channel-sync/'
       path: '/channel-sync'
-      fullPath: '/channel-sync'
+      fullPath: '/channel-sync/'
       preLoaderRoute: typeof AuthenticatedChannelSyncIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/auto-messages/': {
       id: '/_authenticated/auto-messages/'
       path: '/auto-messages'
-      fullPath: '/auto-messages'
+      fullPath: '/auto-messages/'
       preLoaderRoute: typeof AuthenticatedAutoMessagesIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/apps/': {
       id: '/_authenticated/apps/'
       path: '/apps'
-      fullPath: '/apps'
+      fullPath: '/apps/'
       preLoaderRoute: typeof AuthenticatedAppsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/analytics/': {
       id: '/_authenticated/analytics/'
       path: '/analytics'
-      fullPath: '/analytics'
+      fullPath: '/analytics/'
       preLoaderRoute: typeof AuthenticatedAnalyticsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }

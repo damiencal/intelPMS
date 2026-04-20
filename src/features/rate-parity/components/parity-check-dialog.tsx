@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -59,7 +58,7 @@ export function ParityCheckDialog({ open, onOpenChange, onSubmit }: Props) {
   const propertyList = properties?.data ?? []
 
   const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       propertyId: '',
       checkDate: new Date().toISOString().split('T')[0],
@@ -79,7 +78,7 @@ export function ParityCheckDialog({ open, onOpenChange, onSubmit }: Props) {
       propertyId: data.propertyId,
       checkDate: data.checkDate,
       basePrice: data.basePrice ? Number(data.basePrice) : null,
-      channels: data.channels.map((ch) => ({
+      channels: data.channels.map((ch: { name: string; price: string; url?: string; available: boolean }) => ({
         channel: ch.name,
         name: ch.name,
         price: Number(ch.price) || 0,

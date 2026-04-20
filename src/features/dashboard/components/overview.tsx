@@ -61,7 +61,7 @@ export function Overview() {
           tickFormatter={(value) => `$${value}`}
         />
         <Tooltip
-          formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
+          formatter={(value: unknown) => [`$${(value as number).toLocaleString()}`, 'Revenue']}
           contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
         />
         <Bar

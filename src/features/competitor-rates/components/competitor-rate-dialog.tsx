@@ -61,7 +61,7 @@ interface Props {
 
 export function CompetitorRateDialog({ open, onOpenChange, onSubmit, isLoading }: Props) {
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       propertyId: '',
       competitorName: '',

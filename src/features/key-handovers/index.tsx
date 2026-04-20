@@ -306,8 +306,8 @@ export default function KeyHandovers() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Key?'
-        description='This will permanently remove this key record.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this key record.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

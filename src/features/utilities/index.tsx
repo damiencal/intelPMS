@@ -410,10 +410,10 @@ export default function UtilitiesPage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Delete Bill'
-        description='Are you sure you want to delete this utility bill?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this utility bill?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

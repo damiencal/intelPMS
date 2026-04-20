@@ -5,13 +5,11 @@ import {
   Building2,
   ChevronDown,
   ChevronRight,
-  DollarSign,
   Loader2,
   TrendingUp,
   Wallet,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -44,7 +42,6 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import {
   useOwnerStatementsSummary,
   usePropertyStatement,
-  type PropertySummary,
 } from './api'
 
 function fmtCurrency(val: number, currency?: string | null) {

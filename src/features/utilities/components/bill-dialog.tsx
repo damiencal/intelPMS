@@ -64,7 +64,7 @@ export function BillDialog({ open, onOpenChange, onSubmit, isLoading, defaultVal
   const isEdit = !!defaultValues
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       propertyId: '',
       utilityType: 'electric',

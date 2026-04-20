@@ -3,7 +3,6 @@ import {
   Calculator,
   DollarSign,
   FileCheck,
-  FilePlus,
   Loader2,
   MoreHorizontal,
   Pencil,
@@ -418,8 +417,8 @@ export default function TaxReports() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Tax Report?'
-        description='This will permanently remove this report.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this report.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

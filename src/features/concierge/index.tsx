@@ -118,7 +118,7 @@ export default function ConciergePage() {
   function getValue(key: string): string {
     if (key in formValues) return formValues[key]
     if (!knowledge) return ''
-    return (knowledge as Record<string, string | null>)[key] ?? ''
+    return (knowledge as unknown as Record<string, string | null>)[key] ?? ''
   }
 
   function handleChange(key: string, value: string) {
@@ -141,7 +141,7 @@ export default function ConciergePage() {
 
   const filledSections = SECTIONS.filter((s) => {
     const val = knowledge
-      ? (knowledge as Record<string, string | null>)[s.key]
+      ? (knowledge as unknown as Record<string, string | null>)[s.key]
       : null
     return val && val.trim().length > 0
   }).length

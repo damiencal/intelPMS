@@ -299,7 +299,7 @@ export function Expenses() {
                       <div className='flex items-center gap-2'>
                         {e.description}
                         {e.recurring && (
-                          <RefreshCw className='h-3 w-3 text-muted-foreground' title='Recurring' />
+                          <RefreshCw className='h-3 w-3 text-muted-foreground' aria-label='Recurring' />
                         )}
                       </div>
                     </TableCell>

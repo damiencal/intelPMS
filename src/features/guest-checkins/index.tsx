@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  CheckCircle2,
   Copy,
   DoorOpen,
   Eye,

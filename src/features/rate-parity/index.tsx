@@ -92,8 +92,8 @@ export default function RateParity() {
 
   const items: RateParityCheck[] = data?.data ?? []
   const meta = data?.meta
-  const summary = summaryData?.data?.summary
-  const propertyChecks = summaryData?.data?.properties ?? []
+  const summary = summaryData?.data
+  const propertyChecks = summaryData?.data?.lastChecks ?? []
 
   const handleSubmit = async (formData: Record<string, unknown>) => {
     try {
@@ -355,8 +355,8 @@ export default function RateParity() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Parity Check?'
-        description='This will permanently remove this rate parity check.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this rate parity check.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

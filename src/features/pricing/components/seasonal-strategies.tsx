@@ -3,7 +3,6 @@ import {
   Loader2,
 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -17,7 +16,6 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import { Link } from '@tanstack/react-router'
 import { useSeasonalStrategies } from '../api'
 
 function formatDate(d: string | null) {

@@ -9,7 +9,6 @@ import {
   Trash2,
   Users2,
   CheckCircle2,
-  XCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
@@ -322,8 +321,8 @@ export default function TeamShifts() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Shift?'
-        description='This will permanently remove this shift.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this shift.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

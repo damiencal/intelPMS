@@ -201,7 +201,7 @@ export function Analytics() {
                       tickLine={false}
                     />
                     <Tooltip
-                      formatter={(value: number) => [`${value.toFixed(1)}%`, 'Occupancy']}
+                      formatter={(value: unknown) => [`${(value as number).toFixed(1)}%`, 'Occupancy']}
                       contentStyle={{ borderRadius: '8px', border: '1px solid #e5e7eb' }}
                     />
                     <Bar dataKey='occupancyRate' radius={[0, 4, 4, 0]}>

@@ -63,7 +63,7 @@ export function TemplateDialog({ open, onOpenChange, template }: Props) {
   const updateMutation = useUpdateTemplate()
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues: {
       name: '',
       trigger: 'booking_confirmed',

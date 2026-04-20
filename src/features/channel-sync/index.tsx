@@ -456,10 +456,10 @@ export default function ChannelSyncPage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Delete Sync Log'
-        description='Are you sure you want to delete this sync log entry?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this sync log entry?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

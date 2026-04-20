@@ -347,8 +347,8 @@ export default function SecurityDepositsPage() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Deposit?'
-        description='This will permanently remove this security deposit record.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this security deposit record.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

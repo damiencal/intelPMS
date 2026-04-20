@@ -61,7 +61,7 @@ export function InventoryDialog({ open, onOpenChange, item }: Props) {
   const isEdit = !!item
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       name: '', category: '', propertyId: '', quantity: 0,
       minQuantity: 0, unit: '', costPerUnit: null, supplier: '', location: '', notes: '',

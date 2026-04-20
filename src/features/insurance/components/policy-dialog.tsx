@@ -70,7 +70,7 @@ export function PolicyDialog({ open, onOpenChange, onSubmit, isLoading, defaultV
   const isEdit = !!defaultValues
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       propertyId: '',
       policyNumber: '',
