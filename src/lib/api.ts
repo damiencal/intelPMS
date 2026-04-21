@@ -30,13 +30,13 @@ async function handleResponse<T>(res: Response): Promise<T> {
 }
 
 export const api = {
-  get<T>(path: string): Promise<T> {
+  get<T = any>(path: string): Promise<T> {
     return fetch(`${BASE}${path}`, {
       credentials: 'include',
     }).then((r) => handleResponse<T>(r))
   },
 
-  post<T>(path: string, body?: unknown): Promise<T> {
+  post<T = any>(path: string, body?: unknown): Promise<T> {
     return fetch(`${BASE}${path}`, {
       method: 'POST',
       credentials: 'include',
@@ -45,7 +45,7 @@ export const api = {
     }).then((r) => handleResponse<T>(r))
   },
 
-  patch<T>(path: string, body?: unknown): Promise<T> {
+  patch<T = any>(path: string, body?: unknown): Promise<T> {
     return fetch(`${BASE}${path}`, {
       method: 'PATCH',
       credentials: 'include',
@@ -54,7 +54,7 @@ export const api = {
     }).then((r) => handleResponse<T>(r))
   },
 
-  put<T>(path: string, body?: unknown): Promise<T> {
+  put<T = any>(path: string, body?: unknown): Promise<T> {
     return fetch(`${BASE}${path}`, {
       method: 'PUT',
       credentials: 'include',
@@ -63,7 +63,7 @@ export const api = {
     }).then((r) => handleResponse<T>(r))
   },
 
-  delete<T>(path: string): Promise<T> {
+  delete<T = any>(path: string): Promise<T> {
     return fetch(`${BASE}${path}`, {
       method: 'DELETE',
       credentials: 'include',

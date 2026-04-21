@@ -16,7 +16,6 @@ import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -354,10 +353,10 @@ export default function CompetitorRatesPage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Delete Competitor Rate'
-        description='Are you sure you want to delete this rate record?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this rate record?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

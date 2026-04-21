@@ -59,7 +59,7 @@ export function ExpenseDialog({
   const isEditing = !!expense
 
   const form = useForm<ExpenseForm>({
-    resolver: zodResolver(expenseSchema),
+    resolver: zodResolver(expenseSchema) as any,
     defaultValues: expense
       ? {
           description: expense.description,
@@ -89,7 +89,7 @@ export function ExpenseDialog({
       } else {
         await createMutation.mutateAsync({
           ...values,
-          propertyId: propertyId ?? expense?.propertyId ?? undefined,
+          propertyId: propertyId ?? undefined,
         })
         toast.success('Expense created')
       }

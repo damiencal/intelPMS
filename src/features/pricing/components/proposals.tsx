@@ -52,7 +52,7 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { Search } from '@/components/search'
 import { ThemeSwitch } from '@/components/theme-switch'
-import type { PricingProposal, ProposalDetail } from '../api'
+import type { PricingProposal } from '../api'
 import {
   usePricingProposals,
   useProposalDetail,

@@ -384,10 +384,10 @@ export default function LoyaltyPage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Remove Member'
-        description='Are you sure you want to remove this loyalty member?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to remove this loyalty member?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

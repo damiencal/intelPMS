@@ -11,7 +11,6 @@ import {
   Sparkles,
   Target,
   Trash2,
-  TrendingUp,
   X,
 } from 'lucide-react'
 import { toast } from 'sonner'
@@ -464,10 +463,10 @@ export default function PricingRecommendationsPage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Delete Recommendation'
-        description='Are you sure you want to delete this pricing recommendation?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this pricing recommendation?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

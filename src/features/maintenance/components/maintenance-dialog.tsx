@@ -59,7 +59,7 @@ export function MaintenanceDialog({ open, onOpenChange, request }: Props) {
   const isEditing = !!request
 
   const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: request
       ? {
           propertyId: request.propertyId,

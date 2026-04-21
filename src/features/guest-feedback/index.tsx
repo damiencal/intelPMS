@@ -368,8 +368,8 @@ export default function GuestFeedbackPage() {
         open={!!deleteId}
         onOpenChange={() => setDeleteId(null)}
         title='Delete Feedback?'
-        description='This will permanently remove this guest feedback entry.'
-        onConfirm={handleDelete}
+        desc='This will permanently remove this guest feedback entry.'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

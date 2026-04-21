@@ -49,7 +49,7 @@ export function Users() {
             <Loader2 className='h-6 w-6 animate-spin text-muted-foreground' />
           </div>
         ) : (
-          <UsersTable data={members ?? []} />
+          <UsersTable data={(members ?? []) as any} />
         )}
       </Main>
 

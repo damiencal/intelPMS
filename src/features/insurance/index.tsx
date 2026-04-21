@@ -389,10 +389,10 @@ export default function InsurancePage() {
 
       <ConfirmDialog
         open={!!deleteId}
-        onOpenChange={(o) => !o && setDeleteId(null)}
+        onOpenChange={(o) => { if (!o) setDeleteId(null) }}
         title='Delete Policy'
-        description='Are you sure you want to delete this insurance policy?'
-        onConfirm={handleDelete}
+        desc='Are you sure you want to delete this insurance policy?'
+        handleConfirm={handleDelete}
         isLoading={deleteMutation.isPending}
       />
     </>

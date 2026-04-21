@@ -59,7 +59,7 @@ export function VendorDialog({ open, onOpenChange, vendor }: Props) {
   const isEdit = !!vendor
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       name: '',
       company: '',

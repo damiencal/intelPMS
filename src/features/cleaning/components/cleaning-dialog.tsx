@@ -58,7 +58,7 @@ export function CleaningDialog({ open, onOpenChange, schedule }: Props) {
   const isEditing = !!schedule
 
   const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: schedule
       ? {
           propertyId: schedule.propertyId,

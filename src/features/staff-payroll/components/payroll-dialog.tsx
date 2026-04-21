@@ -74,7 +74,7 @@ export function PayrollDialog({
   const isEdit = !!defaultValues
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema) as any,
     defaultValues: {
       staffName: '',
       staffEmail: '',

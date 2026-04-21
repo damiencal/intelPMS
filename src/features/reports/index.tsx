@@ -22,6 +22,7 @@ import {
   YAxis,
 } from 'recharts'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -234,11 +235,11 @@ export function Reports() {
                           axisLine={false}
                         />
                         <Tooltip
-                          formatter={(value: number) => [
-                            formatCurrency(value),
+                          formatter={(value: unknown) => [
+                            formatCurrency(value as number),
                             'Revenue',
                           ]}
-                          labelFormatter={formatMonth}
+                          labelFormatter={(label) => formatMonth(label as string)}
                         />
                         <Bar
                           dataKey='revenue'
@@ -283,9 +284,9 @@ export function Reports() {
                             ))}
                           </Pie>
                           <Tooltip
-                            formatter={(value: number, _name: string, entry: { payload?: { channel?: string } }) => [
-                              `${value} bookings`,
-                              entry.payload?.channel ?? '',
+                            formatter={(value: unknown, _name: unknown, entry: { payload?: { channel?: string } }) => [
+                              `${value as number} bookings`,
+                              (entry as { payload?: { channel?: string } }).payload?.channel ?? '',
                             ]}
                           />
                         </PieChart>
